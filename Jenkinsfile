@@ -7,6 +7,8 @@ pipeline {
         stage('build') {
             steps {
                 sh 'clang --version'
+                sh 'echo "Test output"'
+                
             }
         }
     }
