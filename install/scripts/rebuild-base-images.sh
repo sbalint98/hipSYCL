@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo "Building Ubuntu 18.04 image..."
 sudo singularity build -F base-ubuntu-18.04.sif base-ubuntu-18.04.def
 echo "Building Arch Linux image..."

@@ -6,6 +6,9 @@ rm -rf $BUILD_DIR
 
 #git clone -b hipsycl-0.8 https://github.com/illuhad/aomp $BUILD_DIR/aomp
 git clone https://github.com/ROCm-Developer-Tools/aomp $BUILD_DIR/aomp
+cd $BUILD_DIR/aomp
+git fetch --all
+git checkout rel_0.7-5
 cd $BUILD_DIR/aomp/bin
 export CC=${HIPSYCL_BASE_CC:-clang}
 export CXX=${HIPSYCL_BASE_CXX:-clang++}
