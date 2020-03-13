@@ -27,10 +27,12 @@
 
 #ifndef HIPSYCL_ACCESS_HPP
 #define HIPSYCL_ACCESS_HPP
+#include <iostream>
 
 namespace hipsycl {
 namespace sycl {
 namespace access {
+
 
 enum class mode {
   read = 1024,
@@ -40,6 +42,7 @@ enum class mode {
   discard_read_write,
   atomic
 };
+
 
 enum class target {
   global_buffer = 2014,
@@ -62,9 +65,11 @@ enum class fence_space : char {
   global_and_local
 };
 
+std::ostream& operator<<(std::ostream& out, const mode value);
+std::ostream& operator<<(std::ostream& out, const target value);
+std::ostream& operator<<(std::ostream& out, const placeholder value);
+std::ostream& operator<<(std::ostream& out, const fence_space value);
 }
 }
 }
-
-
 #endif

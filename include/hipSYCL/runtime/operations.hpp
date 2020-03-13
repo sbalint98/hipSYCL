@@ -40,6 +40,7 @@
 #include <cstring>
 #include <functional>
 #include <memory>
+#include <iostream>
 
 namespace hipsycl {
 namespace rt {
@@ -75,6 +76,7 @@ public:
   virtual cost_type get_runtime_costs() { return 1.; }
   virtual bool is_requirement() const { return false; }
   virtual bool is_data_transfer() const { return false; }
+  //ovirtual void dump(std::ostream &ostr);
 
   virtual void dispatch(operation_dispatcher* dispatch) = 0;
 };
@@ -121,7 +123,6 @@ public:
   bool is_buffer_requirement() const 
   { return !is_image_requirement(); }
 };
-
 
 class buffer_memory_requirement : public memory_requirement
 {
@@ -216,6 +217,17 @@ public:
 
     
     return page_ranges_intersect(other_page_range);
+  }
+
+  void dump(std::ostream & ostr) {
+    ostr << "* Dump of buffer_memory_requirement" << std::endl;
+    ostr << "** _dimesnsions: " << _dimensions << std::endl;
+    ostr << "** _mem_region: " << _mem_region << std::endl;
+    _offset.dump(ostr);
+    ostr << "** _element_size: " << _element_size << std::endl;
+    ostr << "** _mode: " << _mode  << std::endl;
+    ostr << "** _target: " << _target << std::endl;
+
   }
 
 private:

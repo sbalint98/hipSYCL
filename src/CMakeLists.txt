@@ -21,6 +21,7 @@ set(HIPSYCL_SOURCES
   sycl/accessor.cpp
   sycl/async_worker.cpp
   sycl/local_memory.cpp
+  sycl/access.cpp
   runtime/application.cpp
   runtime/backend.cpp
   runtime/hints.cpp
