@@ -32,5 +32,7 @@ sed -i 's/patch -p1 < $thisdir\/hip.patch//g' $BUILD_DIR/aomp/bin/build_hip.sh
 sed -i 's/ -Werror//g' $BUILD_DIR/aomp-extras/hostcall/lib/CMakeLists.txt
 sed -i 's/ -Werror//g' $BUILD_DIR/rocr-runtime/src/CMakeLists.txt
 
+sed -i 's/CHECK_SIZE_AND_OFFSET(ipc_perm, mode);//g' $BUILD_DIR/hcc/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp
+
 ./build_aomp.sh
 
