@@ -28,22 +28,30 @@ apt install -y rocm-dev rocm-utils rocm-opencl-dev hip_base hip_hcc
 #./clone_aomp.sh
 #./build_aomp.sh
 
+# LLVM10 from our repos
+#echo "deb http://repo.urz.uni-heidelberg.de/sycl/deb/ ./bionic main" > /etc/apt/sources.list.d/hipsycl.list
+
+#wget -q -O - http://repo.urz.uni-heidelberg.de/sycl/hipsycl.asc | apt-key add -
+
+#apt update
+#apt install hipsycl-base
+
+## LLVM 10
+echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main" >> /etc/apt/sources.list.d/llvm.list
+echo "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main" >> /etc/apt/sources.list.d/llvm.list
+### LLVM 9
+#echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main" >> /etc/apt/sources.list.d/llvm.list
+#echo "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main" >> /etc/apt/sources.list.d/llvm.list
+### LLVM 8
+#echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main" >> /etc/apt/sources.list.d/llvm.list
+#echo "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main" >> /etc/apt/sources.list.d/llvm.list
+#
+#wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+#apt-get update
+#
+
 # LLVM 10
-echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main" >> /etc/apt/sources.list.d/llvm.list
-echo "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic main" >> /etc/apt/sources.list.d/llvm.list
-## LLVM 9
-echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main" >> /etc/apt/sources.list.d/llvm.list
-echo "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main" >> /etc/apt/sources.list.d/llvm.list
-## LLVM 8
-echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main" >> /etc/apt/sources.list.d/llvm.list
-echo "deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main" >> /etc/apt/sources.list.d/llvm.list
-
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
-apt-get update
-
-
-# LLVM 10
-apt-get install -y cmake git libllvm10 llvm-10 llvm-10-dev llvm-10-runtime clang-10 clang-tools-10 libclang-common-10-dev libclang-10-dev libclang1-10 libomp-10-dev llvm-10-tools lldb-10 lld-10
+#apt-get install -y cmake git libllvm10 llvm-10 llvm-10-dev llvm-10-runtime clang-10 clang-tools-10 libclang-common-10-dev libclang-10-dev libclang1-10 libomp-10-dev llvm-10-tools lldb-10 lld-10
 
 # LLVM 9
 # currently there's a bug in the packaging preventing us from installing lldb and llvm-tools, which causes the cmake module to error.

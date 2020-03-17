@@ -1,8 +1,8 @@
 BootStrap: localimage
 From: ../../hipsycl-singularity-build/hipsycl-base.sif
 
-%setup
-cp -R $SRCPATH ${SINGULARITY_ROOTFS}/src
+%files
+ /tmp/sbalint98/hipSYCL/issue-173 /src
 
 %post
 mkdir -p /build

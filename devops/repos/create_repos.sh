@@ -1,5 +1,6 @@
 #!/bin/bash
-BASE_DIR=`pwd`
+DEVOPS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd $DEVOPS_DIR
 SINGULARITY_BASE_DIR=${SINGULARITY_BASE_DIR:-./containers}
 REPO_BASE_DIR=${REPO_BASE_DIR:-/data/repos}
 SCRIPT_DIR=${SCRIPT_DIR:-./scripts}

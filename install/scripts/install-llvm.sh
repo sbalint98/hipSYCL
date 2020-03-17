@@ -1,3 +1,5 @@
+#!/bin/bash 
+LLVM_9_BUILD=${LLVM_9_BUILD:-OFF}
 export INSTALL_PREFIX=${INSTALL_PREFIX:-/opt/hipSYCL}
 
 set -e
@@ -5,7 +7,20 @@ BUILD_DIR=$HOME/git/llvm-vanilla
 rm -rf $BUILD_DIR
 
 #git clone -b release/9.x https://github.com/llvm/llvm-project $BUILD_DIR
-git clone -b release/10.x https://github.com/llvm/llvm-project $BUILD_DIR
+if [ "$LLVM_9_BUILD" == "OFF" ]
+then
+	echo "Cloning LLVM 10"	
+	git clone -b release/10.x https://github.com/llvm/llvm-project $BUILD_DIR
+else
+	echo "Cloning LLVM 9"
+	git clone https://github.com/llvm/llvm-project $BUILD_DIR
+	cd $BUILD_DIR
+	git fetch --all
+	git checkout release/9.x
+	# remove for compatibility with glibc 2.31
+	sed -i 's/CHECK_SIZE_AND_OFFSET(ipc_perm, mode);//g' $BUILD_DIR/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cc
+fi
+
 export CC=${HIPSYCL_BASE_CC:-clang}
 export CXX=${HIPSYCL_BASE_CXX:-clang++}
 export BUILD_TYPE=Release
