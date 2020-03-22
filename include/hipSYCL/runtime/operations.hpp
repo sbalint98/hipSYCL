@@ -32,6 +32,7 @@
 #include "hipSYCL/sycl/id.hpp"
 #include "hipSYCL/sycl/range.hpp"
 #include "hipSYCL/sycl/access.hpp"
+#include "hipSYCL/sycl/detail/debug.hpp"
 
 #include "data.hpp"
 #include "event.hpp"
@@ -157,7 +158,8 @@ public:
       _offset = offset;
       _range = range;
     }
-
+    HIPSYCL_DEBUG_INFO << "CREATED BUFFER MEMORY REQ " << std::endl;
+    dump(std::cout)
   }
 
   std::size_t get_required_size() const override
@@ -227,7 +229,6 @@ public:
     ostr << "** _element_size: " << _element_size << std::endl;
     ostr << "** _mode: " << _mode  << std::endl;
     ostr << "** _target: " << _target << std::endl;
-
   }
 
 private:
