@@ -1,11 +1,32 @@
+#!/bin/bash 
+LLVM_REPO_BRANCH=${LLVM_REPO_BRANCH:-release/9.x}
 export INSTALL_PREFIX=${INSTALL_PREFIX:-/opt/hipSYCL}
 
 set -e
 BUILD_DIR=$HOME/git/llvm-vanilla
 rm -rf $BUILD_DIR
 
-#git clone -b release/9.x https://github.com/llvm/llvm-project $BUILD_DIR
-git clone -b release/10.x https://github.com/llvm/llvm-project $BUILD_DIR
+
+case $LLVM_REPO_BRANCH in
+
+	release/9.x)
+		echo "Cloning LLVM $LLVM_REPO_BRANCH"	
+		git clone -b $LLVM_REPO_BRANCH https://github.com/llvm/llvm-project $BUILD_DIR
+		sed -i 's/CHECK_SIZE_AND_OFFSET(ipc_perm, mode);//g' $BUILD_DIR/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cc
+		;;
+
+	release/10.x)
+		echo "Cloning LLVM $LLVM_REPO_BRANCH"	
+		git clone -b $LLVM_REPO_BRANCH https://github.com/llvm/llvm-project $BUILD_DIR
+		;;
+	
+	*)
+		echo "LLVM version $LLVM_REPO_BRANCH is not supported"
+		exit -1
+		;;
+esac
+		
+
 export CC=${HIPSYCL_BASE_CC:-clang}
 export CXX=${HIPSYCL_BASE_CXX:-clang++}
 export BUILD_TYPE=Release
