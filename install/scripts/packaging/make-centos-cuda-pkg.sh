@@ -6,8 +6,8 @@ set -e
 . ./common/init.sh
 
 
-RPM_ROOT=${BUILD_DIR}/rpm
-mkdir -p ${RPM_ROOT}/{SOURCES,BUILD,RPMS,SPECS,SRPMS,tmp}
+RPM_ROOT=${HIPSYCL_PKG_BUILD_DIR}/rpm
+mkdir -p ${RPM_ROOT}/{SOURCES,HIPSYCL_PKG_BUILD,RPMS,SPECS,SRPMS,tmp}
 
 rm -rf ${CUDA_DIR}/*
 INSTALL_PREFIX=${CUDA_DIR}/opt/hipSYCL sh ../install-cuda.sh
@@ -17,7 +17,7 @@ cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL-cuda.spec
 Summary: CUDA stack for hipSYCL
 Name: hipSYCL-cuda
 Version: ${HIPSYCL_VERSION}
-Release: ${HIPSYCL_BUILD}
+Release: ${HIPSYCL_HIPSYCL_PKG_BUILD}
 License: NVIDIA CUDA EULA
 Packager: Aksel Alpay
 Group: Development/Tools

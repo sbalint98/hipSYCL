@@ -1,23 +1,23 @@
 #!/bin/bash
-LLVM_REPO_BRANCH=${LLVM_REPO_BRANCH:-release/9.x}
+HIPSYCL_PKG_LLVM_REPO_BRANCH=${HIPSYCL_PKG_LLVM_REPO_BRANCH:-release/9.x}
 export INSTALL_PREFIX=${INSTALL_PREFIX:-/opt/hipSYCL}
 
 set -e
-BUILD_DIR=/tmp/hipSYCL-installer
+HIPSYCL_PKG_BUILD_DIR=/tmp/hipSYCL-installer
 
 HIPSYCL_REPO_USER=${HIPSYCL_REPO_USER:-illuhad}
 HIPSYCL_REPO_BRANCH=${HIPSYCL_REPO_BRANCH:-master}
 HIPSYCL_WITH_CUDA=${HIPSYCL_WITH_CUDA:-ON}
 HIPSYCL_WITH_ROCM=${HIPSYCL_WITH_ROCM:-ON}
 
-rm -rf "$BUILD_DIR"
-mkdir -p $BUILD_DIR
+rm -rf "$HIPSYCL_PKG_BUILD_DIR"
+mkdir -p $HIPSYCL_PKG_BUILD_DIR
 
-git clone --recurse-submodules -b $HIPSYCL_REPO_BRANCH https://github.com/$HIPSYCL_REPO_USER/hipSYCL $BUILD_DIR
-mkdir -p $BUILD_DIR/build
-cd $BUILD_DIR/build
+git clone --recurse-submodules -b $HIPSYCL_REPO_BRANCH https://github.com/$HIPSYCL_REPO_USER/hipSYCL $HIPSYCL_PKG_BUILD_DIR
+mkdir -p $HIPSYCL_PKG_BUILD_DIR/build
+cd $HIPSYCL_PKG_BUILD_DIR/build
 
-case $LLVM_REPO_BRANCH in
+case $HIPSYCL_PKG_LLVM_REPO_BRANCH in
 	release/9.x)
 		LLVM_INCLUDE_PATH=$INSTALL_PREFIX/llvm/lib/clang/9.0.1/include 
 		;;
@@ -25,7 +25,7 @@ case $LLVM_REPO_BRANCH in
 		LLVM_INCLUDE_PATH=$INSTALL_PREFIX/llvm/lib/clang/10.0.0/include 
 		;;
 	*)
-		echo "LLVM version $LLVM_REPO_BRANCH is not supported"
+		echo "LLVM version $HIPSYCL_PKG_LLVM_REPO_BRANCH is not supported"
 		exit -1
 		;;
 esac

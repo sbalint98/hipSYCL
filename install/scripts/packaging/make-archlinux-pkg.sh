@@ -5,36 +5,36 @@ set -e
 
 . ./common/init.sh
 
-BUILD_BASE=${BUILD_BASE:-ON}
-BUILD_HIPSYCL=${BUILD_HIPSYCL:-ON}
-BUILD_ROCM=${BUILD_ROCM:-ON}
-BUILD_CUDA=${BUILD_CUDA:-OFF}
+HIPSYCL_PKG_BUILD_BASE=${HIPSYCL_PKG_BUILD_BASE:-ON}
+HIPSYCL_PKG_BUILD_HIPSYCL=${HIPSYCL_PKG_BUILD_HIPSYCL:-ON}
+HIPSYCL_PKG_BUILD_ROCM=${HIPSYCL_PKG_BUILD_ROCM:-ON}
+HIPSYCL_PKG_BUILD_CUDA=${HIPSYCL_PKG_BUILD_CUDA:-OFF}
 
 echo $HIPSYCL_GPG_KEY
 if [ -n "$HIPSYCL_GPG_KEY" ]; then
 	SIGN=" --sign --key $HIPSYCL_GPG_KEY"
 fi
 
-tar -cvf ${BUILD_DIR}/cuda-pkg.tar.gz -C ${CUDA_DIR} opt/
-tar -cvf ${BUILD_DIR}/rocm-pkg.tar.gz -C ${ROCM_DIR} opt/
-tar -cvf ${BUILD_DIR}/common-pkg.tar.gz -C ${COMMON_DIR} opt/
-tar -cvf ${BUILD_DIR}/hipsycl-pkg.tar.gz -C ${HIPSYCL_DIR} opt/
+tar -cvf ${HIPSYCL_PKG_BUILD_DIR}/cuda-pkg.tar.gz -C ${CUDA_DIR} opt/
+tar -cvf ${HIPSYCL_PKG_BUILD_DIR}/rocm-pkg.tar.gz -C ${ROCM_DIR} opt/
+tar -cvf ${HIPSYCL_PKG_BUILD_DIR}/common-pkg.tar.gz -C ${COMMON_DIR} opt/
+tar -cvf ${HIPSYCL_PKG_BUILD_DIR}/hipsycl-pkg.tar.gz -C ${HIPSYCL_DIR} opt/
 
 mkdir -p ${CUDA_DIR}/pkg
 mkdir -p ${ROCM_DIR}/pkg
 mkdir -p ${COMMON_DIR}/pkg
 mkdir -p ${HIPSYCL_DIR}/pkg
 
-mv ${BUILD_DIR}/cuda-pkg.tar.gz ${CUDA_DIR}/pkg/
-mv ${BUILD_DIR}/rocm-pkg.tar.gz ${ROCM_DIR}/pkg/
-mv ${BUILD_DIR}/common-pkg.tar.gz ${COMMON_DIR}/pkg/
-mv ${BUILD_DIR}/hipsycl-pkg.tar.gz ${HIPSYCL_DIR}/pkg/
+mv ${HIPSYCL_PKG_BUILD_DIR}/cuda-pkg.tar.gz ${CUDA_DIR}/pkg/
+mv ${HIPSYCL_PKG_BUILD_DIR}/rocm-pkg.tar.gz ${ROCM_DIR}/pkg/
+mv ${HIPSYCL_PKG_BUILD_DIR}/common-pkg.tar.gz ${COMMON_DIR}/pkg/
+mv ${HIPSYCL_PKG_BUILD_DIR}/hipsycl-pkg.tar.gz ${HIPSYCL_DIR}/pkg/
 
-cat << EOF > ${HIPSYCL_DIR}/pkg/PKGBUILD
+cat << EOF > ${HIPSYCL_DIR}/pkg/PKGHIPSYCL_PKG_BUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 pkgname=hipSYCL
 pkgver=${HIPSYCL_VERSION}
-pkgrel=${HIPSYCL_BUILD}
+pkgrel=${HIPSYCL_HIPSYCL_PKG_BUILD}
 pkgdesc="Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs"
 arch=('x86_64')
 url="https://github.com/illuhad/hipSYCL"
@@ -50,11 +50,11 @@ package() {
 }
 EOF
 
-cat << EOF > ${COMMON_DIR}/pkg/PKGBUILD
+cat << EOF > ${COMMON_DIR}/pkg/PKGHIPSYCL_PKG_BUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 pkgname=hipSYCL-base
 pkgver=${HIPSYCL_VERSION}
-pkgrel=${HIPSYCL_BUILD}
+pkgrel=${HIPSYCL_HIPSYCL_PKG_BUILD}
 pkgdesc="LLVM compiler stack for hipSYCL"
 arch=('x86_64')
 url="https://github.com/illuhad/hipSYCL"
@@ -70,11 +70,11 @@ package() {
 }
 EOF
 
-cat << EOF > ${ROCM_DIR}/pkg/PKGBUILD
+cat << EOF > ${ROCM_DIR}/pkg/PKGHIPSYCL_PKG_BUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 pkgname=hipSYCL-rocm
 pkgver=${HIPSYCL_VERSION}
-pkgrel=${HIPSYCL_BUILD}
+pkgrel=${HIPSYCL_HIPSYCL_PKG_BUILD}
 pkgdesc="ROCm compiler stack and libraries for hipSYCL"
 arch=('x86_64')
 url="https://github.com/illuhad/hipSYCL"
@@ -93,11 +93,11 @@ EOF
 
 
 
-cat << EOF > ${CUDA_DIR}/pkg/PKGBUILD
+cat << EOF > ${CUDA_DIR}/pkg/PKGHIPSYCL_PKG_BUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 pkgname=hipSYCL-cuda
 pkgver=${HIPSYCL_VERSION}
-pkgrel=${HIPSYCL_BUILD}
+pkgrel=${HIPSYCL_HIPSYCL_PKG_BUILD}
 pkgdesc="CUDA stack for hipSYCL"
 arch=('x86_64')
 url="https://github.com/illuhad/hipSYCL"
@@ -114,19 +114,19 @@ package() {
 }
 EOF
 
-if [ "$BUILD_HIPSYCL" = "ON" ]; then
+if [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON" ]; then
 cd ${HIPSYCL_DIR}/pkg && makepkg -d -c --skipinteg  $SIGN
 fi
 
-if [ "$BUILD_BASE" = "ON" ]; then
+if [ "$HIPSYCL_PKG_BUILD_BASE" = "ON" ]; then
 cd ${COMMON_DIR}/pkg && makepkg -d -c --skipinteg  $SIGN
 fi
 
-if [ "$BUILD_ROCM" = "ON" ]; then
+if [ "$HIPSYCL_PKG_BUILD_ROCM" = "ON" ]; then
 cd ${ROCM_DIR}/pkg && makepkg -d -c --skipinteg  $SIGN
 fi
 
-if [ "$BUILD_CUDA" = "ON" ]; then
+if [ "$HIPSYCL_PKG_BUILD_CUDA" = "ON" ]; then
 cd ${CUDA_DIR}/pkg && makepkg -d -c --skipinteg $SIGN
-echo $BUILD_CUDA
+echo $HIPSYCL_PKG_BUILD_CUDA
 fi

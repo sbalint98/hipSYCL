@@ -8,11 +8,11 @@ mkdir -p ${CUDA_DIR}/pkg
 cp ../install-cuda.sh ${CUDA_DIR}/pkg/
 
 
-cat << EOF > ${CUDA_DIR}/pkg/PKGBUILD
+cat << EOF > ${CUDA_DIR}/pkg/PKGHIPSYCL_PKG_BUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 pkgname=hipSYCL-cuda
 pkgver=${HIPSYCL_VERSION}
-pkgrel=${HIPSYCL_BUILD}
+pkgrel=${HIPSYCL_HIPSYCL_PKG_BUILD}
 pkgdesc="CUDA stack for hipSYCL"
 arch=('x86_64')
 url="https://github.com/illuhad/hipSYCL"

@@ -5,20 +5,20 @@ set -e
 
 . ./common/init.sh
 
-BUILD_BASE=${BUILD_BASE:-ON}
-BUILD_HIPSYCL=${BUILD_HIPSYCL:-ON}
-BUILD_ROCM=${BUILD_ROCM:-ON}
-BUILD_CUDA=${BUILD_CUDA:-OFF}
+HIPSYCL_PKG_BUILD_BASE=${HIPSYCL_PKG_BUILD_BASE:-ON}
+HIPSYCL_PKG_BUILD_HIPSYCL=${HIPSYCL_PKG_BUILD_HIPSYCL:-ON}
+HIPSYCL_PKG_BUILD_ROCM=${HIPSYCL_PKG_BUILD_ROCM:-ON}
+HIPSYCL_PKG_BUILD_CUDA=${HIPSYCL_PKG_BUILD_CUDA:-OFF}
 
-RPM_ROOT=${BUILD_DIR}/rpm
-mkdir -p ${RPM_ROOT}/{SOURCES,BUILD,RPMS,SPECS,SRPMS,tmp}
+RPM_ROOT=${HIPSYCL_PKG_BUILD_DIR}/rpm
+mkdir -p ${RPM_ROOT}/{SOURCES,HIPSYCL_PKG_BUILD,RPMS,SPECS,SRPMS,tmp}
 
 
 cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL.spec
 Summary: Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs
 Name: hipSYCL
 Version: ${HIPSYCL_VERSION}
-Release: ${HIPSYCL_BUILD}
+Release: ${HIPSYCL_HIPSYCL_PKG_BUILD}
 License: BSD
 Packager: Aksel Alpay
 Group: Development/Tools
@@ -45,7 +45,7 @@ cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL-base.spec
 Summary: base LLVM compiler stack for hipSYCL
 Name: hipSYCL-base
 Version: ${HIPSYCL_VERSION}
-Release: ${HIPSYCL_BUILD}
+Release: ${HIPSYCL_HIPSYCL_PKG_BUILD}
 License: LLVM
 Packager: Aksel Alpay
 Group: Development/Tools
@@ -68,7 +68,7 @@ cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL-rocm.spec
 Summary: ROCm stack for hipSYCL
 Name: hipSYCL-rocm
 Version: ${HIPSYCL_VERSION}
-Release: ${HIPSYCL_BUILD}
+Release: ${HIPSYCL_HIPSYCL_PKG_BUILD}
 License: LLVM
 Packager: Aksel Alpay
 Group: Development/Tools
@@ -91,7 +91,7 @@ cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL-cuda.spec
 Summary: CUDA stack for hipSYCL
 Name: hipSYCL-cuda
 Version: ${HIPSYCL_VERSION}
-Release: ${HIPSYCL_BUILD}
+Release: ${HIPSYCL_HIPSYCL_PKG_BUILD}
 License: NVIDIA CUDA EULA
 Packager: Aksel Alpay
 Group: Development/Tools
@@ -114,18 +114,18 @@ EOF
 
 cd ${RPM_ROOT}/SPECS
 
-if [ "$BUILD_HIPSYCL" = "ON"  ]; then
+if [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON"  ]; then
 rpmbuild -bb hipSYCL.spec
 fi
 
-if [ "$BUILD_BASE" = "ON"  ]; then
+if [ "$HIPSYCL_PKG_BUILD_BASE" = "ON"  ]; then
 rpmbuild -bb hipSYCL-base.spec
 fi
 
-if [ "$BUILD_ROCM" = "ON"  ]; then
+if [ "$HIPSYCL_PKG_BUILD_ROCM" = "ON"  ]; then
 rpmbuild -bb hipSYCL-rocm.spec
 fi
 
-if [ "$BUILD_CUDA" = "ON"  ]; then
+if [ "$HIPSYCL_PKG_BUILD_CUDA" = "ON"  ]; then
 rpmbuild -D '%_python_bytecompile_errors_terminate_build 0' -bb hipSYCL-cuda.spec
 fi
