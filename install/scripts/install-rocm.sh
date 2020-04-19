@@ -1,14 +1,15 @@
 export INSTALL_PREFIX=${INSTALL_PREFIX:-/opt/hipSYCL}
 
+HIPSYCL_PKG_AOMP_RELEASE=${HIPSYCL_PKG_AOMP_VERSION:-0.7-7}
+HIPSYCL_PKG_AOMP_TAG=${HIPSYCL_PKG_AOMP_TAG:-rel_${HIPSYCL_PKG_AOMP_RELEASE}}
+
 set -e
 BUILD_DIR=$HOME/git/aomp
 rm -rf $BUILD_DIR
 
 #git clone -b hipsycl-0.8 https://github.com/illuhad/aomp $BUILD_DIR/aomp
-git clone https://github.com/ROCm-Developer-Tools/aomp $BUILD_DIR/aomp
-cd $BUILD_DIR/aomp
-git fetch --all
-git checkout rel_0.7-7
+git clone -b $HIPSYCL_PKG_AOMP_TAG https://github.com/ROCm-Developer-Tools/aomp $BUILD_DIR/aomp
+
 cd $BUILD_DIR/aomp/bin
 export CC=${HIPSYCL_BASE_CC:-clang}
 export CXX=${HIPSYCL_BASE_CXX:-clang++}
@@ -38,4 +39,3 @@ sed -i 's/CHECK_SIZE_AND_OFFSET(ipc_perm, mode);//g' $BUILD_DIR/llvm-project/com
 sed -i 's/CHECK_SIZE_AND_OFFSET(ipc_perm, mode);//g' $BUILD_DIR/hcc/llvm-project/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp
 
 ./build_aomp.sh
-
