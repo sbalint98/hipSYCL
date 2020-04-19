@@ -11,8 +11,10 @@ cd /tmp/hipsycl-pkg-builder
 
 echo $HIPSYCL_PKG_CONTAINER_DIR
 #  we write all relevant vars in a file which will be sourced later
+set +e
 env | grep HIPSYCL_PKG_LLVM > llvm_aomp_versions
-env | grep HIPSYCL_AOMP >> llvm_aomp_versions
+env | grep HIPSYCL_PKG_AOMP >> llvm_aomp_versions
+set -e
 sed -i -e 's/^/export /' llvm_aomp_versions
 
 # Workaround for exposing variable inside singularity post script
