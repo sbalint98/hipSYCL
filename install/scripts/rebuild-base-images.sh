@@ -4,27 +4,15 @@ HIPSYCL_PKG_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 HIPSYCL_PKG_CONTAINER_DIR=${HIPSYCL_PKG_CONTAINER_DIR:-$HIPSYCL_PKG_SCRIPT_DIR/containers}
 HIPSYCL_PKG_LLVM_REPO_BRANCH=${HIPSYCL_PKG_LLVM_REPO_BRANCH:-release/9.x}
 
-mkdir -p /tmp/hipsycl-pkg-builder
-cp $HIPSYCL_PKG_SCRIPT_DIR/*.def /tmp/hipsycl-pkg-builder
-cp $HIPSYCL_PKG_SCRIPT_DIR/*.sh /tmp/hipsycl-pkg-builder
-cd /tmp/hipsycl-pkg-builder
+export SINGULARITYENV_HIPSYCL_PKG_LLVM_REPO_BRANCH = $HIPSYCL_PKG_LLVM_REPO_BRANCH
+export SINGULARITYENV_HIPSYCL_PKG_LLVM_VERSION_MAJOR = $HIPSYCL_PKG_LLVM_VERSION_MAJOR
+export SINGULARITYENV_HIPSYCL_PKG_LLVM_VERSION_MINOR = $HIPSYCL_PKG_LLVM_VERSION_MINOR
+export SINGULARITYENV_HIPSYCL_PKG_LLVM_VERSION_PATCH = $HIPSYCL_PKG_LLVM_VERSION_PATCH
+export SINGULARITYENV_HIPSYCL_PKG_AOMP_RELEASE = $HIPSYCL_PKG_AOMP_RELEASE
+export SINGULARITYENV_HIPSYCL_PKG_AOMP_TAG = $HIPSYCL_PKG_AOMP_TAG
+
 
 echo $HIPSYCL_PKG_CONTAINER_DIR
-#  we write all relevant vars in a file which will be sourced later
-set +e
-env | grep HIPSYCL_PKG_LLVM > llvm_aomp_versions
-env | grep HIPSYCL_PKG_AOMP >> llvm_aomp_versions
-set -e
-sed -i -e 's/^/export /' llvm_aomp_versions
-
-# Workaround for exposing variable inside singularity post script
-sed -i '/%setup/a cp ./llvm_aomp_versions ${SINGULARITY_ROOTFS}/llvm_aomp_versions' base-ubuntu-18.04.def
-sed -i '/%setup/a cp ./llvm_aomp_versions ${SINGULARITY_ROOTFS}/llvm_aomp_versions' base-archlinux-rolling.def
-sed -i '/%setup/a cp ./llvm_aomp_versions ${SINGULARITY_ROOTFS}/llvm_aomp_versions' base-centos-7.def
-
-sed -i "/%post/a . ./llvm_aomp_versions" base-ubuntu-18.04.def
-sed -i "/%post/a . ./llvm_aomp_versions" base-archlinux-rolling.def
-sed -i "/%post/a . ./llvm_aomp_versions" base-centos-7.def
 
 mkdir -p $HIPSYCL_PKG_CONTAINER_DIR
 
