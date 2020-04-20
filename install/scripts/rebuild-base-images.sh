@@ -18,9 +18,13 @@ set -e
 sed -i -e 's/^/export /' llvm_aomp_versions
 
 # Workaround for exposing variable inside singularity post script
-sed -i "/%post/a . llvm_aomp_versions" base-ubuntu-18.04.def
-sed -i "/%post/a . llvm_aomp_versions" base-archlinux-rolling.def
-sed -i "/%post/a . llvm_aomp_versions" base-centos-7.def
+sed -i '/%setup/a cp ./llvm_aomp_versions ${SINGULARITY_ROOTFS}/llvm_aomp_versions' base-ubuntu-18.04.def
+sed -i '/%setup/a cp ./llvm_aomp_versions ${SINGULARITY_ROOTFS}/llvm_aomp_versions' base-archlinux-rolling.def
+sed -i '/%setup/a cp ./llvm_aomp_versions ${SINGULARITY_ROOTFS}/llvm_aomp_versions' base-centos-7.def
+
+sed -i "/%post/a . ./llvm_aomp_versions" base-ubuntu-18.04.def
+sed -i "/%post/a . ./llvm_aomp_versions" base-archlinux-rolling.def
+sed -i "/%post/a . ./llvm_aomp_versions" base-centos-7.def
 
 mkdir -p $HIPSYCL_PKG_CONTAINER_DIR
 
