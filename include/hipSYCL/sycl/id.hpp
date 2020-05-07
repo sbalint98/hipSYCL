@@ -32,6 +32,7 @@
 #include "detail/device_array.hpp"
 #include <cassert>
 #include <type_traits>
+#include <iostream>
 
 namespace hipsycl {
 namespace sycl {
@@ -216,6 +217,11 @@ struct id {
   HIPSYCL_ID_BINARY_OP_IN_PLACE_SIZE_T(&=)
   HIPSYCL_ID_BINARY_OP_IN_PLACE_SIZE_T(|=)
   HIPSYCL_ID_BINARY_OP_IN_PLACE_SIZE_T(^=)
+
+  void dump(std::ostream & ostr){
+      std::cout << _data.size() << std::endl;
+  }
+
 private:
   detail::device_array<std::size_t, dimensions> _data;
 };

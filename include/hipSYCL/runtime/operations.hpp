@@ -32,6 +32,8 @@
 #include "hipSYCL/sycl/id.hpp"
 #include "hipSYCL/sycl/range.hpp"
 #include "hipSYCL/sycl/access.hpp"
+#include "hipSYCL/common/debug.hpp"
+#include "hipSYCL/common/serialization.hpp"
 
 #include "hipSYCL/glue/deferred_pointer.hpp"
 
@@ -44,6 +46,7 @@
 #include <cstring>
 #include <functional>
 #include <memory>
+#include <iostream>
 
 namespace hipsycl {
 namespace rt {
@@ -78,6 +81,7 @@ public:
   virtual cost_type get_runtime_costs() { return 1.; }
   virtual bool is_requirement() const { return false; }
   virtual bool is_data_transfer() const { return false; }
+  //ovirtual void dump(std::ostream &ostr);
 
   virtual void dispatch(operation_dispatcher* dispatch) = 0;
 };
@@ -125,7 +129,6 @@ public:
   { return !is_image_requirement(); }
 };
 
-
 class buffer_memory_requirement : public memory_requirement
 {
 public:
@@ -155,7 +158,8 @@ public:
       _offset = offset;
       _range = range;
     }
-
+    HIPSYCL_DEBUG_INFO << "CREATED BUFFER MEMORY REQ " << std::endl;
+    dump(std::cout);
   }
 
   std::size_t get_required_size() const override
@@ -230,6 +234,16 @@ public:
     return glue::deferred_pointer<T>(&_device_data_location);
   }
   
+  void dump(std::ostream & ostr) {
+    ostr << "* Dump of buffer_memory_requirement" << std::endl;
+    ostr << "** _dimesnsions: " << _dimensions << std::endl;
+    ostr << "** _mem_region: " << _mem_region << std::endl;
+    _offset.dump(ostr);
+    ostr << "** _element_size: " << _element_size << std::endl;
+    ostr << "** _mode: " << _mode  << std::endl;
+    ostr << "** _target: " << _target << std::endl;
+  }
+
 private:
   bool page_ranges_intersect(buffer_data_region::page_range other) const{
     auto my_range = _mem_region->get_page_range(_offset, _range);

@@ -43,7 +43,8 @@ set(HIPSYCL_SOURCES
   runtime/hip/hip_queue.cpp
   runtime/hip/hip_allocator.cpp
   runtime/hip/hip_device_manager.cpp
-  runtime/hw_model/memcpy.cpp)
+  runtime/hw_model/memcpy.cpp
+  runtime/common/serialization.cpp)
 
 
 
