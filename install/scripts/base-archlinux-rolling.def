@@ -12,7 +12,7 @@ cp ./add-repo-arch.sh ${SINGULARITY_ROOTFS}/add-repo-arch.sh
 [ "$HIPSYCL_PKG_BUILD_CUDA" = "ON" ] && bash /install-cuda.sh || echo "Not building CUDA"
 echo "FROM INSIDE POST: $HIPSYCL_PKG_BUILD_ROCM"
 pacman -Syu --noconfirm
-pacman -S --noconfirm numactl pciutils libelf wget perl base-devel git cmake clang
+pacman -S --noconfirm numactl pciutils libelf wget perl base-devel git cmake clang libglvnd
 # required for aomp build
 pacman -S --noconfirm  gawk pkg-config python3 rsync
 

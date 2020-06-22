@@ -10,7 +10,7 @@ cp ./add-repo-ubuntu.sh ${SINGULARITY_ROOTFS}/add-repo-ubuntu.sh
 
 %post
 apt update
-apt install -y libnuma-dev libpci-dev libelf-dev wget perl perl-modules gcc g++ git cmake clang
+apt install -y libnuma-dev libpci-dev libelf-dev wget perl perl-modules gcc g++ git cmake clang mesa-common-dev
 # required for aomp build
 apt install -y iputils-ping gawk pkg-config python3 rsync
 
