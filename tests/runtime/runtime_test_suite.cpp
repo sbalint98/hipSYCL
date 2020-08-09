@@ -1,32 +1,54 @@
-/*
- * This file is part of hipSYCL, a SYCL implementation based on CUDA/HIP
- *
- * Copyright (c) 2020 Aksel Alpay and contributors
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
 
+#include "runtime_test_suite.hpp"
+#include <iostream>
 
+using namespace hipsycl;
 
-#define BOOST_TEST_MODULE hipSYCL runtime tests
-#include <boost/test/unit_test.hpp>
+void print_vector(std::ostream &out, std::vector<std::pair<rt::device_id, std::vector<rt::range_store::rect> > > list){
+  for (auto [device, allocs]: list){
+    std::string out_str = "Device: " + std::to_string(device.get_id()) + " ";
+    out  << out_str;
+    for (int i=0; i<allocs.size(); i++){
+      std::string padding = std::string(out_str.length(), ' ');
+      if (i>0){out << padding;}
+      out << allocs[i].first << " " << allocs[i].second << std::endl;
+    }
+  }
+}
+std::ostream &operator<<(std::ostream &out, const mark_current_configuration &v){
+  out << std::endl;
+  out << "Marked current: " << std::endl;
+  print_vector(out, v.make_current_list);
+  out << "Expected outdated: " << std::endl;
+  print_vector(out, v.expected_outdated);
+  return out;
+}
+
+std::ostream &operator<<(std::ostream &out, const mark_valid_configuration &v){
+  out << std::endl;
+  out << "Marked current: " << std::endl;
+  print_vector(out, v.make_current_list);
+  out << "Make valid: " << std::endl;
+  print_vector(out, v.make_valid_list);
+  out << "Expected outdated: " << std::endl;
+  print_vector(out, v.expected);
+  return out;
+}
+
+std::ostream &operator<<(std::ostream &out, const update_source_candidates_configuration &v){
+  out << std::endl;
+  out << "Marked current: " << std::endl;
+  print_vector(out, v.make_current_list);
+  out << "Make valid: " << std::endl;
+  print_vector(out, v.make_valid_list);
+  out << "Expected candidate sources: " << std::endl;
+  for (auto const& [device, copies]: v.expected){
+    out << "  For device_" << device.get_id() << " source candidates:" << std::endl;
+    for (auto const& [source_device, copy_region] : copies){
+      out << "    From device_" << source_device.get_id()
+          <<" "<< copy_region.first << copy_region.second << std::endl;
+    }
+  }
+
+  return out;
+}
