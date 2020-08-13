@@ -110,6 +110,8 @@ BOOST_AUTO_TEST_CASE(page_table) {
     for (auto fill_subrange: fill_subranges){
       pt.add(fill_subrange);
     }
+
+    
     BOOST_CHECK(!pt.entire_range_empty(full_range));
     std::vector<rt::range_store::rect> intersections;
     pt.intersections_with(intersection_subrange, intersections);
@@ -141,9 +143,97 @@ BOOST_AUTO_TEST_CASE(page_table) {
 
 
 BOOST_AUTO_TEST_CASE(data_region) {
-  rt::range<3> num_elements= rt::range<3>{16,16,16};
-  rt::data_region(num_elements, 1, 4);
+  
+  // Should make the list of devices part of this 
+  
+  struct input_configuration {
+    std::size_t page_size;
+    std::size_t element_size;
+    rt::range<3> num_elements;
+    rt::backend_descriptor backend_descriptor{rt::hardware_platform::cpu,
+                             rt::api_platform::openmp_cpu};
+  };
+
+  std::vector<input_configuration> input_configurations{
+    {4, 1, rt::range<3>{16,16,16}}
+
+  };
 
 
+  //std::size_t page_size = 4;
+  //std::size_t element_size = 1; 
+  //rt::range<3> num_elements= rt::range<3>{16,16,16};
+  //rt::backend_descriptor a;
+  //a.hw_platform = rt::hardware_platform::cpu;
+  //a.sw_platform = rt::api_platform::openmp_cpu;
+  //a.id = rt::backend_id::openmp_cpu;
+
+  for (auto a : input_configurations){
+    rt::device_id device_0(a.backend_descriptor, 1);
+    rt::data_region test_region_1(a.num_elements, a.element_size, a.page_size);
+
+    //Testing If allocations are actually allocated 
+    BOOST_CHECK(!test_region_1.has_allocation(device_0));
+    //I am also not sure about this malloc part but I hope that for testing it is fine
+    test_region_1.add_empty_allocation(device_0, malloc(23));
+    BOOST_CHECK(test_region_1.has_allocation(device_0));
+    test_region_1.remove_allocation(device_0);
+    BOOST_CHECK(!test_region_1.has_allocation(device_0));
+    test_region_1.add_nonempty_allocation(device_0, malloc(23));
+    BOOST_CHECK(test_region_1.has_allocation(device_0));
+    test_region_1.remove_allocation(device_0);
+    BOOST_CHECK(!test_region_1.has_allocation(device_0));
+    // I am not sure with what should I instantiate this but I hope for testing it is fine
+    std::function<void*(rt::range<3> num_elements, std::size_t element_size)> mem_alloc;
+    test_region_1.add_placeholder_allocation(device_0, mem_alloc);
+    BOOST_CHECK(test_region_1.has_allocation(device_0));
+    test_region_1.remove_allocation(device_0);
+    BOOST_CHECK(!test_region_1.has_allocation(device_0));
+    // At this point we have one device and no allocations  
+
+    rt::device_id device_1 (a.backend_descriptor, 2);
+    rt::device_id device_2 (a.backend_descriptor, 3);
+    rt::device_id device_3 (a.backend_descriptor, 4);
+    rt::device_id device_4 (a.backend_descriptor, 5);
+    
+
+
+    test_region_1.add_nonempty_allocation(device_0, malloc(23));
+    test_region_1.add_nonempty_allocation(device_1, malloc(23));
+    test_region_1.add_nonempty_allocation(device_2, malloc(23));
+    test_region_1.add_nonempty_allocation(device_3, malloc(23));
+    //Why don't I have to pass a allocation shape for add_placeholder and add_nonempty?
+    test_region_1.mark_range_current(device_0, rt::id<3>{0,0,0}, rt::range<3>{2,2,2});
+    BOOST_CHECK(test_region_1.has_initialized_content(rt::id<3>{0,0,0}, rt::range<3>{4,4,4}));
+    
+    std::vector<rt::range_store::rect> out;
+    test_region_1.get_outdated_regions(device_1, rt::id<3>{0,0,0}, rt::range<3>{16,16,16},  out);
+    BOOST_CHECK(out.size()==1);
+    // Here I need some sor of iterator over the outdated regions 
+    BOOST_CHECK((out[0].first==rt::id<3>{0,0,0}));
+    BOOST_CHECK((out[0].second==rt::range<3>{4,4,4}));
+
+    //Mark Entire range valid on other device
+    test_region_1.mark_range_valid(device_2, rt::id<3>{0,0,0}, rt::range<3>{2,2,2});
+    std::vector<rt::range_store::rect> out_2;
+    test_region_1.get_outdated_regions(device_2, rt::id<3>{0,0,0}, rt::range<3>{16,16,16},  out_2);
+    BOOST_CHECK(out_2.size()==0);
+
+    //Mark part of the range valid on other device
+    test_region_1.mark_range_valid(device_3, rt::id<3>{0,0,0}, rt::range<3>{1,1,1});
+    std::vector<rt::range_store::rect> out_3;
+    test_region_1.get_outdated_regions(device_3, rt::id<3>{0,0,0}, rt::range<3>{16,16,16},  out_3);
+    BOOST_CHECK(out_3.size()==1);
+    std::cout << out_3.size() << std::endl;
+    // Here I need some sor of iterator over the outdated regions
+    // On device_3 the region rt::id<3>{1,1,1} rt::range{1,1,1} should still be invalid
+    // Therfore the entire page should be invalid region 
+    BOOST_CHECK((out_3[0].first==rt::id<3>{0,0,0}));
+    BOOST_CHECK((out_3[0].second==rt::range<3>{4,4,4}));
+
+    //Make this universal for every page size
+    BOOST_CHECK(test_region_1.get_page_range(rt::id<3>{0,0,0}, rt::range<3>{16,16,16}) 
+                == std::make_pair (rt::id<3>{0,0,0}, rt::range<3>(16/a.page_size, 16/a.page_size, 16/a.page_size)) );
+  }
 }
 BOOST_AUTO_TEST_SUITE_END()
