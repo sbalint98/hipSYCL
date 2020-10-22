@@ -10,12 +10,10 @@ export CC=${HIPSYCL_BASE_CC:-/opt/hipSYCL/llvm/bin/clang}
 export CXX=${HIPSYCL_BASE_CXX:-/opt/hipSYCL/llvm/bin/clang++}
 export SUDO=${SUDO:-"disable"}
 export AOMP=$HIPSYCL_INSTALL_PREFIX/rocm
+echo $AOMP
 export BUILD_TYPE=Release
-#export NVPTXGPUS=60,61,62,70
-#export AOMP_BUILD_HIPSYCL_ESSENTIAL=1
 export AOMP_BUILD_HIP=1
 export CUDA=${CUDA:-$HIPSYCL_INSTALL_PREFIX/cuda}
-#export AOMP_BUILD_CUDA=1
 
 if [ -d "$HIPSYCL_ROCM_BUILD_DIR" ]; then
        read -p  "The build directory already exists, do you want to use $HIPSYCL_ROCM_BUILD_DIR anyways?[y]" -n 1 -r

@@ -17,7 +17,7 @@ LLVM_INCLUDE_PATH=$HIPSYCL_INSTALL_PREFIX/llvm/lib/clang/${HIPSYCL_PKG_LLVM_VERS
 ${HIPSYCL_PKG_LLVM_VERSION_MINOR}.\
 ${HIPSYCL_PKG_LLVM_VERSION_PATCH}/include
 if [ -d "$HIPSYCL_BUILD_DIR" ]; then
-       read -p  "The build directory already exists, do you want to use $HIPSYCL_BUILD_DIR anyways?[y]" -n 1 -r
+       read -r -n 1 -p "The build directory already exists, do you want to use $HIPSYCL_BUILD_DIR anyways?[y]"
        echo 
        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
               echo "Please specify a different directory, exiting"

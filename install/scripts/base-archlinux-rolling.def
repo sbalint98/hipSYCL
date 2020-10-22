@@ -7,6 +7,7 @@ cp ./install-cuda.sh ${SINGULARITY_ROOTFS}/install-cuda.sh
 cp ./install-hipsycl.sh ${SINGULARITY_ROOTFS}/install-hipsycl.sh
 cp ./install-llvm.sh ${SINGULARITY_ROOTFS}/install-llvm.sh
 cp ./add-repo-arch.sh ${SINGULARITY_ROOTFS}/add-repo-arch.sh
+cp ./install-cmake.sh ${SINGULARITY_ROOTFS}/install-cmake.sh 
 
 %post
 [ "$HIPSYCL_PKG_BUILD_CUDA" = "ON" ] && bash /install-cuda.sh || echo "Not building CUDA"
@@ -20,5 +21,15 @@ pacman -S --noconfirm  gawk pkg-config python3 rsync
 bash /add-repo-arch.sh
 
 bash /install-cuda.sh 
-[ "$HIPSYCL_PKG_BUILD_BASE" = "ON" ] && bash /install-llvm.sh || pacman -Sdd --noconfirm hipSYCL-base
-[ "$HIPSYCL_PKG_BUILD_ROCM" = "ON" ] && bash /install-rocm.sh || pacman -Sdd --noconfirm hipSYCL-rocm
+bash /install-cmake.sh
+export PATH=/opt/cmake/cmake/bin/:$PATH
+if [ "$HIPSYCL_PKG_BUILD_BASE" = "ON" ]; then 
+   bash /install-llvm.sh
+else
+   pacman -Sdd --noconfirm hipSYCL-base
+fi
+if [ "$HIPSYCL_PKG_BUILD_ROCM" = "ON" ]; then 
+   bash /install-rocm.sh
+else
+   pacman -Sdd --noconfirm hipSYCL-base
+fi
