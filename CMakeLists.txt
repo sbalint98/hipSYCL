@@ -24,15 +24,19 @@ find_package(Boost COMPONENTS context fiber REQUIRED)
 
 # Check for CUDA/ROCm and clang
 find_package(CUDA QUIET)
-# We currently search for hipcc to check for ROCm installation
-find_program(HIPCC_COMPILER NAMES hipcc HINTS ${ROCM_PATH})
-set(ROCM_PATH /opt/rocm CACHE PATH "Path to ROCm installation")
 
-if(HIPCC_COMPILER MATCHES "-NOTFOUND")
-  set(ROCM_FOUND false)
-else()
-  set(ROCM_FOUND true)
-endif()
+find_package(amd_comgr HINTS ${ROCM_PATH}/comgr/lib/cmake/)
+find_package(AMDDeviceLibs HINTS ${ROCM_PATH}/rocm-device-libs/lib/cmake)
+find_package(hsa-runtime64 HINTS ${ROCM_PATH}/hsa-rocr-dev/lib/cmake)
+find_package(HIP HINTS ${ROCM_PATH}/hip/lib/cmake/)
+
+get_cmake_property(_variableNames VARIABLES)
+# for some reason hsa does not set a var for the installation prefix,
+# instead it sets: PACKAGE_PREFIX_DIR, this is probably a bug, but we 
+# need this var later so we will have to set it:
+set(HSA_PREFIX ${hsa-runtime64_DIR}/../../../)
+# Also there is no prefix set for HIP so we set it ourselves
+set(HIP_PREFIX ${HIP_LIB_INSTALL_DIR}/../)
 
 if(WITH_CUDA_BACKEND)
   if(NOT CUDA_FOUND)
@@ -40,7 +44,7 @@ if(WITH_CUDA_BACKEND)
   endif()
 endif()
 if(WITH_ROCM_BACKEND)
-  if(NOT ROCM_FOUND)
+  if(NOT HIP_FOUND)
     #  message(SEND_ERROR "hipcc was not found")
   
     # User has requested ROCm, but we could not find hipcc.
@@ -130,7 +134,8 @@ endif()
 
 set(DEFAULT_GPU_ARCH "" CACHE STRING "Optional: Default GPU architecture to compile for when targeting GPUs (e.g.: sm_60 or gfx900)")
 set(ROCM_LIBS "-L${ROCM_PATH}/lib -L${ROCM_PATH}/hip/lib -lamdhip64" CACHE STRING "Necessary libraries for ROCm")
-set(ROCM_LINK_LINE "-rpath ${ROCM_PATH}/lib -rpath ${ROCM_PATH}/hip/lib ${ROCM_LIBS}")
+set(ROCM_LINK_LINE "-rpath $HIPSYCL_ROCM_PATH/lib -rpath $HIPSYCL_ROCM_PATH/hip/lib ${ROCM_LIBS}")
+set(ROCM_CXX_FLAGS "-I$HIPSYCL_ROCM_PATH/hip/include -I$HIPSYCL_ROCM_PATH/hsa-rocr-dev/include --hip-device-lib-path=$HIPSYCL_ROCM_PATH/rocm-device-libs/lib")
 set(CUDA_LINK_LINE "-rpath $HIPSYCL_CUDA_LIB_PATH -L$HIPSYCL_CUDA_LIB_PATH -lcudart" CACHE STRING "Arguments passed to compiler to link CUDA libraries to SYCL applications")
 
 add_subdirectory(src)
@@ -146,6 +151,7 @@ set(SYCLCC_CONFIG_FILE "{
   \"default-is-dryrun\" : \"false\",
   \"default-clang-include-path\" : \"${CLANG_INCLUDE_PATH}\",
   \"default-rocm-link-line\" : \"${ROCM_LINK_LINE}\",
+  \"default-rocm-cxx-flags\" : \"${ROCM_CXX_FLAGS}\",
   \"default-cuda-link-line\" : \"${CUDA_LINK_LINE}\"
 }
 ")

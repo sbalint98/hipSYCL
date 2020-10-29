@@ -155,7 +155,10 @@ class syclcc_config:
 
       'rocm-link-line' : option("--hipsycl-rocm-link-line", "HIPSYCL_ROCM_LINK_LINE", "default-rocm-link-line",
 """ The arguments passed to the compiler to link with ROCm libraries."""),
-      
+ 
+      'rocm-cxx-flags' : option("--hipsycl-rocm-cxx-flags", "HIPSYCL_ROCM_CXX_FLAGS", "default-rocm-cxx-flags",
+""" The arguments passed to the compiler to link with ROCm libraries."""),
+     
       'cuda-link-line' : option("--hipsycl-cuda-link-line", "HIPSYCL_CUDA_LINK_LINE", "default-cuda-link-line",
 """ The arguments passed to the compiler to link with CUDA libraries."""),
 
@@ -440,7 +443,12 @@ class syclcc_config:
   def rocm_link_line(self):
     components = self._retrieve_option("rocm-link-line").split(' ')
     return [self._substitute_rocm_template_string(arg) for arg in components]
-  
+
+  @property
+  def rocm_cxx_flags(self):
+    components = self._retrieve_option("rocm-cxx-flags").split(' ')
+    return [self._substitute_rocm_template_string(arg) for arg in components]
+ 
   @property
   def cuda_link_line(self):
     components = self._retrieve_option("cuda-link-line").split(' ')
@@ -545,6 +553,7 @@ class hip_invocation:
     self._rocm_path = config.rocm_path
     self._clang = config.clang_path
     self._linker_args = config.rocm_link_line
+    self._cxx_flags = config.rocm_cxx_flags
     self._clang_include_path = config.clang_include_path
     self._hipsycl_lib_path = os.path.join(config.hipsycl_installation_path, "lib/")
 
@@ -555,14 +564,12 @@ class hip_invocation:
 
     flags = [
         "-x", "hip",
-        "--hip-device-lib-path=" + os.path.join(self._rocm_path, "lib"),
         "-D__HIPSYCL_ENABLE_HIP_TARGET__",
         "-D__HIPSYCL_CLANG__",
         # clang erroneously sets feature detection flags for 
         # __float128 even though it is not supported for CUDA / HIP,
         # see https://bugs.llvm.org/show_bug.cgi?id=47559.
         "-U__FLOAT128__", "-U__SIZEOF_FLOAT128__",
-        "-I" + os.path.join(self._rocm_path, "include"),
         # This here is necessary because some distributions of clang
         # incorrectly have the gcc/system headers *before* clangs own
         # include path. This causes "file not found" errors when the
@@ -571,7 +578,7 @@ class hip_invocation:
         "-isystem", self._clang_include_path,
         "-fplugin=" + os.path.join(self._hipsycl_lib_path, "libhipSYCL_clang.so")
       ]
-
+    flags += self._cxx_flags
     for t in self._hip_targets:
       flags += ["--cuda-gpu-arch=" + t]
       
@@ -693,7 +700,7 @@ class compiler:
   @property
   def common_linker_flags(self):
     linker_args = [
-      "-Wl,-rpath", self._hipsycl_lib_path,
+      "-Wl,-rpath=" + self._hipsycl_lib_path,
       "-L"+self._hipsycl_lib_path,
       "-lhipSYCL-rt"
     ]
