@@ -20,7 +20,7 @@ FORCE)
   endif()
 endif()
 
-find_package(Boost COMPONENTS context fiber REQUIRED)
+find_package(Boost COMPONENTS context fiber HINTS /opt/hipSYCL/boost/boost/lib/cmake/  REQUIRED)
 
 # Check for CUDA/ROCm and clang
 find_package(CUDA QUIET)
