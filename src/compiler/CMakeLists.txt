@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(hipSYCL_clang)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 
 get_filename_component(CLANG_BINARY_PREFIX ${CLANG_EXECUTABLE_PATH} DIRECTORY)
@@ -37,6 +38,8 @@ if(APPLE)
 else()
     target_link_libraries(hipSYCL_clang -Wl,-znodelete)
 endif()
+
+
 
 install(TARGETS hipSYCL_clang
         LIBRARY DESTINATION lib
