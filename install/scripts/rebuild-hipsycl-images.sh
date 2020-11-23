@@ -28,13 +28,16 @@ cp $HIPSYCL_PKG_SCRIPT_DIR/*.def /tmp/hipsycl-pkg-builder
 cp $HIPSYCL_PKG_SCRIPT_DIR/*.sh /tmp/hipsycl-pkg-builder
 cd /tmp/hipsycl-pkg-builder
 
-echo $HIPSYCL_PKG_CONTAINER_DIR
+supported_distros=("archlinux-rolling" "ubuntu-18.04" "centos-7")
+for distro in "${supported_distros[@]}"
+do
+echo "Building hipSYCL final image for $distro at $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro.sif"
+sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-$distro.def
+sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro.sif hipsycl-$distro.def
+done
+#sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-archlinux-rolling.def
+#sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-centos-7.def
+#
+#sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-ubuntu-18.04.sif hipsycl-ubuntu-18.04.def
+#sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-centos-7.sif hipsycl-centos-7.def
 
-sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-ubuntu-18.04.def
-sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-archlinux-rolling.def
-sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-centos-7.def
-
-
-sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-ubuntu-18.04.sif hipsycl-ubuntu-18.04.def
-sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-archlinux-rolling.sif hipsycl-archlinux-rolling.def
-sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-centos-7.sif hipsycl-centos-7.def

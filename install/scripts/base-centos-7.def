@@ -8,13 +8,7 @@ cp ./install-base-spack.sh ${SINGULARITY_ROOTFS}/install-base-spack.sh
 
 %post
 yum update -y
-yum install -y epel-release centos-release-scl
-yum install -y cmake3
-ln -s /usr/bin/cmake3 /usr/bin/cmake
-yum install -y sed sed unzip numactl-devel numactl-libs pciutils-devel pciutils-libs  wget perl perl-Data-Dumper perl-Data-Dumper-*  gcc-c++ git devtoolset-7 rpm-build rpmdevtools elfutils-libelf-devel
-source /opt/rh/devtoolset-7/enable
-# required for aomp build
-yum install -y gawk pkgconfig python34 python3 rsync mesa-libGL-devel
+yum install -y sed unzip python34 python3 git parallel wget perl perl-Data-Dumper cmake
 
 bash /install-cuda.sh
-bash /install-base-spack.sh
+#bash /install-base-spack.sh
