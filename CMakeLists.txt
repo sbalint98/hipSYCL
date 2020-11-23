@@ -31,12 +31,13 @@ find_package(hsa-runtime64 HINTS ${ROCM_PATH}/hsa-rocr-dev/lib/cmake)
 find_package(HIP HINTS ${ROCM_PATH}/hip/lib/cmake/)
 
 get_cmake_property(_variableNames VARIABLES)
+set(INSTALL_RPATH_USE_LINK_PATH TRUE)
 # for some reason hsa does not set a var for the installation prefix,
 # instead it sets: PACKAGE_PREFIX_DIR, this is probably a bug, but we 
 # need this var later so we will have to set it:
-set(HSA_PREFIX ${hsa-runtime64_DIR}/../../../)
+# set(HSA_PREFIX ${hsa-runtime64_DIR}/../../../)
 # Also there is no prefix set for HIP so we set it ourselves
-set(HIP_PREFIX ${HIP_LIB_INSTALL_DIR}/../)
+# set(HIP_PREFIX ${HIP_LIB_INSTALL_DIR}/../)
 
 if(WITH_CUDA_BACKEND)
   if(NOT CUDA_FOUND)
@@ -137,7 +138,9 @@ set(ROCM_LIBS "-L${ROCM_PATH}/lib -L${ROCM_PATH}/hip/lib -lamdhip64" CACHE STRIN
 set(ROCM_LINK_LINE "-rpath $HIPSYCL_ROCM_PATH/lib -rpath $HIPSYCL_ROCM_PATH/hip/lib ${ROCM_LIBS}")
 set(ROCM_CXX_FLAGS "-I$HIPSYCL_ROCM_PATH/hip/include -I$HIPSYCL_ROCM_PATH/hsa-rocr-dev/include --hip-device-lib-path=$HIPSYCL_ROCM_PATH/rocm-device-libs/lib")
 set(CUDA_LINK_LINE "-rpath $HIPSYCL_CUDA_LIB_PATH -L$HIPSYCL_CUDA_LIB_PATH -lcudart" CACHE STRING "Arguments passed to compiler to link CUDA libraries to SYCL applications")
-
+set(CUDA_CXX_FLAGS "")
+set(OMP_LINK_LINE "-L$HIPSYCL_PATH/boost/boost/lib ")
+set(OMP_CXX_FLAGS " " )
 add_subdirectory(src)
 
 set(SYCLCC_CONFIG_FILE "{
@@ -150,9 +153,12 @@ set(SYCLCC_CONFIG_FILE "{
   \"default-use-bootstrap-mode\" : \"false\",
   \"default-is-dryrun\" : \"false\",
   \"default-clang-include-path\" : \"${CLANG_INCLUDE_PATH}\",
+  \"default-omp-link-line\" : \"${OMP_LINK_LINE}\",
+  \"default-omp-cxx-flags\" : \"${OMP_CXX_FLAGS}\",
   \"default-rocm-link-line\" : \"${ROCM_LINK_LINE}\",
   \"default-rocm-cxx-flags\" : \"${ROCM_CXX_FLAGS}\",
-  \"default-cuda-link-line\" : \"${CUDA_LINK_LINE}\"
+  \"default-cuda-link-line\" : \"${CUDA_LINK_LINE}\",
+  \"default-cuda-cxx-flags\" : \"${CUDA_CXX_FLAGS}\"
 }
 ")
 
