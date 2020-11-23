@@ -658,7 +658,7 @@ class omp_invocation:
       "-lboost_fiber"
     ]
 
-    linker_args += self._cxx_flags
+    linker_args += self._linker_args
     if sys.platform == "darwin":
         # y'all still need libomp installed
         linker_args += ["-Xclang"]
