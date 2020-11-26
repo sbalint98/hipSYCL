@@ -153,11 +153,24 @@ class syclcc_config:
       'clang-include-path' : option("--hipsycl-clang-include-path", "HIPSYCL_CLANG_INCLUDE_PATH", "default-clang-include-path",
 """  The path to clang's internal include headers. Typically of the form $PREFIX/include/clang/<version>/include. Only required by ROCm."""),
 
-      'rocm-link-line' : option("--hipsycl-rocm-link-line", "HIPSYCL_ROCM_LINK_LINE", "default-rocm-link-line",
+     'omp-link-line' : option("--hipsycl-omp-link-line", "HIPSYCL_OMP_LINK_LINE", "default-omp-link-line",
+""" The arguments passed to the compiler to link with OMP libraries."""),
+
+      'omp-cxx-flags' : option("--hipsycl-omp-cxx-flags", "HIPSYCL_OMP_CXX_FLAGS", "default-omp-cxx-flags",
+""" The arguments passed to the compiler to compile for the omp backend"""),
+
+     'rocm-link-line' : option("--hipsycl-rocm-link-line", "HIPSYCL_ROCM_LINK_LINE", "default-rocm-link-line",
 """ The arguments passed to the compiler to link with ROCm libraries."""),
-      
+
+      'rocm-cxx-flags' : option("--hipsycl-rocm-cxx-flags", "HIPSYCL_ROCM_CXX_FLAGS", "default-rocm-cxx-flags",
+""" The arguments passed to the compiler to compile for the ROCm backend"""),
+
       'cuda-link-line' : option("--hipsycl-cuda-link-line", "HIPSYCL_CUDA_LINK_LINE", "default-cuda-link-line",
 """ The arguments passed to the compiler to link with CUDA libraries."""),
+
+      'cuda-cxx-flags' : option("--hipsycl-cuda-cxx-flags", "HIPSYCL_CUDA_CXX_FLAGS", "default-cuda-cxx-flags",
+""" The arguments passed to the compiler to compile for cuda backend"""),
+
 
       'config-file' : option("--hipsycl-config-file", "HIPSYCL_CONFIG_FILE", "default-config-file",
 """  Select an alternative path for the config file containing the default hipSYCL settings.
@@ -292,6 +305,11 @@ class syclcc_config:
       'HIPSYCL_LIB_PATH' : os.path.join(self.hipsycl_installation_path, "lib")
     }
 
+  def _get_omp_substitution_vars(self):
+    return {
+      'HIPSYCL_PATH' : self.hipsycl_installation_path,
+    }
+
   def _substitute_template_string(self, template_string, substitution_dict):
     template = string.Template(template_string)
     return template.substitute(substitution_dict)
@@ -303,6 +321,10 @@ class syclcc_config:
   def _substitute_cuda_template_string(self, template_string):
     return self._substitute_template_string(
       template_string, self._get_cuda_substitution_vars())
+
+  def _substitute_omp_template_string(self, template_string):
+    return self._substitute_template_string(
+      template_string, self._get_omp_substitution_vars())
 
   def _is_option_set_to_non_default_value(self, option_name):
     opt = self._options[option_name]
@@ -437,13 +459,33 @@ class syclcc_config:
     return os.path.join(syclcc_path, "..")
 
   @property
+  def omp_link_line(self):
+    components = self._retrieve_option("omp-link-line").split(' ')
+    return [self._substitute_omp_template_string(arg) for arg in components]
+
+  @property
+  def omp_cxx_flags(self):
+    components = self._retrieve_option("omp-cxx-flags").split(' ')
+    return [self._substitute_omp_template_string(arg) for arg in components]
+
+  @property
   def rocm_link_line(self):
     components = self._retrieve_option("rocm-link-line").split(' ')
     return [self._substitute_rocm_template_string(arg) for arg in components]
-  
+
+  @property
+  def rocm_cxx_flags(self):
+    components = self._retrieve_option("rocm-cxx-flags").split(' ')
+    return [self._substitute_rocm_template_string(arg) for arg in components]
+
   @property
   def cuda_link_line(self):
     components = self._retrieve_option("cuda-link-line").split(' ')
+    return [self._substitute_cuda_template_string(arg) for arg in components]
+
+  @property
+  def cuda_cxx_flags(self):
+    components = self._retrieve_option("cuda-cxx-flags").split(' ')
     return [self._substitute_cuda_template_string(arg) for arg in components]
 
   @property
@@ -507,6 +549,8 @@ class cuda_invocation:
     self._clang = config.clang_path
     self._linker_args = config.cuda_link_line
     self._hipsycl_lib_path = os.path.join(config.hipsycl_installation_path, "lib/")
+    self._linker_args = config.cuda_link_line
+    self._cxx_flags = config.cuda_cxx_flags
 
   def get_compiler_preference(self):
     return (self._clang, 100)
@@ -524,7 +568,7 @@ class cuda_invocation:
         "-U__FLOAT128__", "-U__SIZEOF_FLOAT128__",
         "-fplugin=" + os.path.join(self._hipsycl_lib_path, "libhipSYCL_clang.so")
       ]
-
+    flags += self._cxx_flags
     for t in self._cuda_targets:
       flags += ["--cuda-gpu-arch=" + t]
       
@@ -545,6 +589,7 @@ class hip_invocation:
     self._rocm_path = config.rocm_path
     self._clang = config.clang_path
     self._linker_args = config.rocm_link_line
+    self._cxx_flags = config.rocm_cxx_flags
     self._clang_include_path = config.clang_include_path
     self._hipsycl_lib_path = os.path.join(config.hipsycl_installation_path, "lib/")
 
@@ -555,14 +600,12 @@ class hip_invocation:
 
     flags = [
         "-x", "hip",
-        "--hip-device-lib-path=" + os.path.join(self._rocm_path, "lib"),
         "-D__HIPSYCL_ENABLE_HIP_TARGET__",
         "-D__HIPSYCL_CLANG__",
         # clang erroneously sets feature detection flags for 
         # __float128 even though it is not supported for CUDA / HIP,
         # see https://bugs.llvm.org/show_bug.cgi?id=47559.
         "-U__FLOAT128__", "-U__SIZEOF_FLOAT128__",
-        "-I" + os.path.join(self._rocm_path, "include"),
         # This here is necessary because some distributions of clang
         # incorrectly have the gcc/system headers *before* clangs own
         # include path. This causes "file not found" errors when the
@@ -571,7 +614,7 @@ class hip_invocation:
         "-isystem", self._clang_include_path,
         "-fplugin=" + os.path.join(self._hipsycl_lib_path, "libhipSYCL_clang.so")
       ]
-
+    flags += self._cxx_flags
     for t in self._hip_targets:
       flags += ["--cuda-gpu-arch=" + t]
       
@@ -582,6 +625,9 @@ class hip_invocation:
 
 class omp_invocation:
   def __init__(self, config):
+    self._linker_args = config.omp_link_line
+    self._cxx_flags = config.omp_cxx_flags
+
     if not "omp" in config.targets:
       raise RuntimeError("OpenMP not among targets")
     if len(config.targets["omp"]) != 0:
@@ -597,6 +643,7 @@ class omp_invocation:
     flags = [
         "-D__HIPSYCL_ENABLE_OMPHOST_TARGET__",
       ]
+    flags += self._cxx_flags
 
     if sys.platform == "darwin":
         # y'all still need libomp installed
@@ -611,6 +658,7 @@ class omp_invocation:
       "-lboost_fiber"
     ]
 
+    linker_args += self._linker_args
     if sys.platform == "darwin":
         # y'all still need libomp installed
         linker_args += ["-Xclang"]
