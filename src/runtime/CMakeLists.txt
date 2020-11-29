@@ -78,7 +78,7 @@ if(WITH_ROCM_BACKEND)
   if(NOT HIP_FOUND)
     target_include_directories(hipSYCL-rt PRIVATE ${ROCM_PATH}/include)
   endif()
-  target_link_libraries(hipSYCL-rt PRIVATE $<IF:HIP_FOUND,"hip::device",${ROCM_LIBS}>)
+  target_link_libraries(hipSYCL-rt PRIVATE $<IF:$<BOOL:HIP_FOUND>,hip::device,${ROCM_LIBS}>)
 endif()
 
 if(WITH_CPU_BACKEND)
