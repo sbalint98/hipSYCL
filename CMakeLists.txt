@@ -25,13 +25,12 @@ find_package(Boost COMPONENTS context fiber REQUIRED)
 # Check for CUDA/ROCm and clang
 find_package(CUDA QUIET)
 
-find_package(amd_comgr HINTS ${ROCM_PATH}/comgr/lib/cmake/)
-find_package(AMDDeviceLibs HINTS ${ROCM_PATH}/rocm-device-libs/lib/cmake)
-find_package(hsa-runtime64 HINTS ${ROCM_PATH}/hsa-rocr-dev/lib/cmake)
+#find_package(amd_comgr HINTS ${ROCM_PATH}/comgr/lib/cmake/)
+#find_package(AMDDeviceLibs HINTS ${ROCM_PATH}/rocm-device-libs/lib/cmake)
+#find_package(hsa-runtime64 HINTS ${ROCM_PATH}/hsa-rocr-dev/lib/cmake)
 find_package(HIP HINTS ${ROCM_PATH}/hip/lib/cmake/)
 
 get_cmake_property(_variableNames VARIABLES)
-set(INSTALL_RPATH_USE_LINK_PATH TRUE)
 # for some reason hsa does not set a var for the installation prefix,
 # instead it sets: PACKAGE_PREFIX_DIR, this is probably a bug, but we 
 # need this var later so we will have to set it:
