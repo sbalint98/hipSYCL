@@ -8,7 +8,7 @@ cp ./install-base-spack.sh ${SINGULARITY_ROOTFS}/install-base-spack.sh
 
 %post
 yum update -y
-yum install -y sed unzip python34 python3 git parallel wget perl perl-Data-Dumper cmake
+yum install -y sed unzip python34 python3 git parallel wget perl perl-Data-Dumper cmake curl
 
 bash /install-cuda.sh
 #bash /install-base-spack.sh
