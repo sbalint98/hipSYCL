@@ -507,6 +507,11 @@ class syclcc_config:
     return [self._substitute_cuda_template_string(arg) for arg in components]
 
   @property
+  def cuda_cxx_flags(self):
+    components = self._retrieve_option("cuda-cxx-flags").split(' ')
+    return [self._substitute_cuda_template_string(arg) for arg in components]
+
+  @property
   def forwarded_compiler_arguments(self):
     return self._forwarded_args
 

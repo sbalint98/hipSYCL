@@ -31,12 +31,13 @@ find_package(hsa-runtime64 HINTS ${ROCM_PATH}/hsa-rocr-dev/lib/cmake)
 find_package(HIP HINTS ${ROCM_PATH}/hip/lib/cmake/)
 
 get_cmake_property(_variableNames VARIABLES)
+set(INSTALL_RPATH_USE_LINK_PATH TRUE)
 # for some reason hsa does not set a var for the installation prefix,
 # instead it sets: PACKAGE_PREFIX_DIR, this is probably a bug, but we 
 # need this var later so we will have to set it:
-set(HSA_PREFIX ${hsa-runtime64_DIR}/../../../)
+# set(HSA_PREFIX ${hsa-runtime64_DIR}/../../../)
 # Also there is no prefix set for HIP so we set it ourselves
-set(HIP_PREFIX ${HIP_LIB_INSTALL_DIR}/../)
+# set(HIP_PREFIX ${HIP_LIB_INSTALL_DIR}/../)
 
 if(WITH_CUDA_BACKEND)
   if(NOT CUDA_FOUND)
