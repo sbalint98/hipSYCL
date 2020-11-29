@@ -22,21 +22,23 @@ endif()
 
 set(ENV{BOOST_ROOT} ${BOOST_PATH})
 find_package(Boost COMPONENTS context fiber REQUIRED)
+
 # Check for CUDA/ROCm and clang
 find_package(CUDA QUIET)
+find_package(HIP QUIET)
 
-#find_package(amd_comgr HINTS ${ROCM_PATH}/comgr/lib/cmake/)
-#find_package(AMDDeviceLibs HINTS ${ROCM_PATH}/rocm-device-libs/lib/cmake)
-#find_package(hsa-runtime64 HINTS ${ROCM_PATH}/hsa-rocr-dev/lib/cmake)
-find_package(HIP HINTS ${ROCM_PATH}/hip/lib/cmake/)
-
-get_cmake_property(_variableNames VARIABLES)
-# for some reason hsa does not set a var for the installation prefix,
-# instead it sets: PACKAGE_PREFIX_DIR, this is probably a bug, but we 
-# need this var later so we will have to set it:
-# set(HSA_PREFIX ${hsa-runtime64_DIR}/../../../)
-# Also there is no prefix set for HIP so we set it ourselves
-# set(HIP_PREFIX ${HIP_LIB_INSTALL_DIR}/../)
+# In case HIP is not found via the cmake pkgs we fall back to the legacy rocm discovery:
+if (NOT HIP_FOUND)
+  find_program(HIPCC_COMPILER NAMES hipcc HINTS ${ROCM_PATH})
+  set(ROCM_PATH /opt/rocm CACHE PATH "Path to ROCm installation")
+  if(HIPCC_COMPILER MATCHES "-NOTFOUND")
+    set(ROCM_FOUND false)
+  else()
+    set(ROCM_FOUND true)
+  endif()
+else()
+  set(ROCM_FOUND true)
+endif()
 
 if(WITH_CUDA_BACKEND)
   if(NOT CUDA_FOUND)
@@ -44,7 +46,7 @@ if(WITH_CUDA_BACKEND)
   endif()
 endif()
 if(WITH_ROCM_BACKEND)
-  if(NOT HIP_FOUND)
+  if(NOT ROCM_FOUND)
     #  message(SEND_ERROR "hipcc was not found")
   
     # User has requested ROCm, but we could not find hipcc.
@@ -54,7 +56,7 @@ if(WITH_ROCM_BACKEND)
     # are faced with a minimal/incomplete ROCm installation
     # that could still be enough for us.
     # Let's assume the user knows what he/she is doing.
-  endif()
+  endif()  
 endif()
 
 set(WITH_CUDA_BACKEND ${CUDA_FOUND} CACHE BOOL "Build hipSYCL support for NVIDIA GPUs with CUDA")
