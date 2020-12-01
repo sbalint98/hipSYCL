@@ -154,7 +154,7 @@ class syclcc_config:
 """  The path to clang's internal include headers. Typically of the form $PREFIX/include/clang/<version>/include. Only required by ROCm."""),
 
       'sequential-link-line' : option("--hipsycl-squential-link-line", "HIPSYCL_SEQUENTIAL_LINK_LINE", "default-squential-link-line",
-""" The arguments passed to the compiler to link with libraries of the sequential backend"""),
+""" The arguments passed to the linker for the sequential backend"""),
 
       'sequential-cxx-flags' : option("--hipsycl-squential-cxx-flags", "HIPSYCL_SEQUENTIAL_CXX_FLAGS", "default-sequential-cxx-flags",
 """ The arguments passed to the compiler to compile for the sequential backend"""),
