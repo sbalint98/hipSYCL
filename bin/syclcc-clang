@@ -160,22 +160,22 @@ class syclcc_config:
 """ The arguments passed to the compiler to compile for the sequential backend"""),
 
       'omp-link-line' : option("--hipsycl-omp-link-line", "HIPSYCL_OMP_LINK_LINE", "default-omp-link-line",
-""" The arguments passed to the compiler to link with OMP libraries."""),
+""" The arguments passed to the linker for the OpenMP backend."""),
 
       'omp-cxx-flags' : option("--hipsycl-omp-cxx-flags", "HIPSYCL_OMP_CXX_FLAGS", "default-omp-cxx-flags",
-""" The arguments passed to the compiler to compile for the omp backend"""),
+""" The arguments passed to the compiler to compile for the OpenMP backend"""),
 
       'rocm-link-line' : option("--hipsycl-rocm-link-line", "HIPSYCL_ROCM_LINK_LINE", "default-rocm-link-line",
-""" The arguments passed to the compiler to link with ROCm libraries."""),
+""" The arguments passed to the linker for the ROCm backend."""),
 
       'rocm-cxx-flags' : option("--hipsycl-rocm-cxx-flags", "HIPSYCL_ROCM_CXX_FLAGS", "default-rocm-cxx-flags",
 """ The arguments passed to the compiler to compile for the ROCm backend"""),
 
       'cuda-link-line' : option("--hipsycl-cuda-link-line", "HIPSYCL_CUDA_LINK_LINE", "default-cuda-link-line",
-""" The arguments passed to the compiler to link with CUDA libraries."""),
+""" The arguments passed to the linker for the CUDA backend."""),
 
       'cuda-cxx-flags' : option("--hipsycl-cuda-cxx-flags", "HIPSYCL_CUDA_CXX_FLAGS", "default-cuda-cxx-flags",
-""" The arguments passed to the compiler to compile for cuda backend"""),
+""" The arguments passed to the compiler to compile for the CUDA backend"""),
 
       'config-file' : option("--hipsycl-config-file", "HIPSYCL_CONFIG_FILE", "default-config-file",
 """  Select an alternative path for the config file containing the default hipSYCL settings.
