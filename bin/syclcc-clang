@@ -613,8 +613,8 @@ class hip_invocation:
     return (self._clang, 100)
 
   def get_cxx_flags(self):
-
-    flags = [
+    flags = self._cxx_flags
+    flags += [
         "-x", "hip",
         "-D__HIPSYCL_ENABLE_HIP_TARGET__",
         "-D__HIPSYCL_CLANG__",
@@ -625,7 +625,6 @@ class hip_invocation:
         # with #include_next <...>
         "-fplugin=" + os.path.join(self._hipsycl_lib_path, "libhipSYCL_clang.so")
       ]
-    flags += self._cxx_flags
     for t in self._hip_targets:
       flags += ["--cuda-gpu-arch=" + t]
       
