@@ -49,18 +49,15 @@ export HIPSYCL_PKG_AOMP_TAG
 export HIPSYCL_REPO_USER
 export HIPSYCL_REPO_BRANCH
 export HIPSYCL_PKG_NAME_SUFFIX
+export HIPSYCL_PKG_DEVOPS_DIR
 #export SINGULARITY_TMPDIR=/data/sbalint/singularity_tmp/
 #export HIPSYCL_GPG_KEY=B2B75080
 
-
 [ "$HIPSYCL_PKG_BUILD_CUDA" = "ON" ] || [ "$HIPSYCL_PKG_BUILD_ROCM" = "ON" ] || \
 [ "$HIPSYCL_PKG_BUILD_BASE" = "ON" ] && [ "$HIPSYCL_PKG_NO_BUILD" = "OFF" ] &&  \
-echo "Building the base images"
 bash $HIPSYCL_PKG_SCRIPT_DIR_ABS/rebuild-base-images.sh
 
 [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON" ] && [ "$HIPSYCL_PKG_NO_BUILD" = "OFF" ] && \
-echo "Building the hipSYCL images"
-echo "Running: $HIPSYCL_PKG_SCRIPT_DIR_ABS/rebuild-hipsycl-images.sh"
 bash $HIPSYCL_PKG_SCRIPT_DIR_ABS/rebuild-hipsycl-images.sh
 
 [ "$HIPSYCL_PKG_PACKAGE" = "ON" ] && bash $HIPSYCL_PKG_DEVOPS_DIR/create_pkgs.sh

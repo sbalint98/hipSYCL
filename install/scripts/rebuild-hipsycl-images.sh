@@ -31,13 +31,8 @@ cd /tmp/hipsycl-pkg-builder
 supported_distros=("archlinux-rolling" "ubuntu-18.04" "centos-7")
 for distro in "${supported_distros[@]}"
 do
-echo "Building hipSYCL final image for $distro at $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro.sif"
-sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-$distro.def
-sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro.sif hipsycl-$distro.def
+  echo "Installing hipSYCL into image for $distro at $HIPSYCL_PKG_CONTAINER_DIR/$distro"
+  sudo rm -rf /tmp/hipsycl-installer-sbalint/
+  sudo -E singularity exec --writable --no-home  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-hipsycl.sh
 done
-#sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-archlinux-rolling.def
-#sed -i "s|From: *|From: $HIPSYCL_PKG_CONTAINER_DIR/|g" hipsycl-centos-7.def
-#
-#sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-ubuntu-18.04.sif hipsycl-ubuntu-18.04.def
-#sudo -E singularity build -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-centos-7.sif hipsycl-centos-7.def
 

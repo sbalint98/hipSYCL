@@ -24,7 +24,7 @@ Packager: Aksel Alpay
 Group: Development/Tools
 BuildRequires: coreutils
 BuildRoot: ${RPM_ROOT}/tmp/hipSYCL-${HIPSYCL_VERSION_STRING}
-Requires: python3, hipSYCL-base${HIPSYCL_PKG_NAME_SUFFIX}, boost169-devel
+Requires: python3, hipSYCL-base${HIPSYCL_PKG_NAME_SUFFIX}
 AutoReq: no
 
 %description
@@ -32,6 +32,8 @@ AutoReq: no
 
 %install
 cp -R ${HIPSYCL_DIR}/* %{buildroot}
+
+%global __python %{__python3}
 
 %files
 /opt/hipSYCL/bin
@@ -59,8 +61,11 @@ Requires: devtoolset-7
 %install
 cp -R ${COMMON_DIR}/* %{buildroot}
 
+%global __python %{__python3}
+
 %files
 /opt/hipSYCL/llvm
+/opt/hipSYCL/boost
 
 EOF
 
@@ -82,6 +87,8 @@ Requires: hipSYCL${HIPSYCL_PKG_NAME_SUFFIX}, numactl-devel, numactl-libs, pciuti
 %install
 cp -R ${ROCM_DIR}/* %{buildroot}
   
+%global __python %{__python3}
+
 %files
 /opt/hipSYCL/rocm
 
@@ -105,6 +112,7 @@ AutoReq: no
 %install
 cp -R ${CUDA_DIR}/* %{buildroot}
 
+%global __python %{__python3}
 
 %files
 /opt/hipSYCL/cuda

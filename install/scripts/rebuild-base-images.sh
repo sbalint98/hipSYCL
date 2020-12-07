@@ -32,17 +32,17 @@ export SINGULARITYENV_HIPSYCL_PKG_AOMP_TAG
 echo $HIPSYCL_PKG_CONTAINER_DIR
 cd $HIPSYCL_PKG_SCRIPT_DIR
 mkdir -p $HIPSYCL_PKG_CONTAINER_DIR
-supported_distros=("ubuntu-18.04" "archlinux-rolling" "centos-7")
+supported_distros=("archlinux-rolling" "centos-7" "ubuntu-18.04")
 for distro in "${supported_distros[@]}"
 do
 	echo "Building $distro image... with base pkgs"
-	sudo -E singularity build --sandbox -F $HIPSYCL_PKG_CONTAINER_DIR/base-$distro.sif base-$distro.def
+	sudo -E singularity build --sandbox -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro base-$distro.def
 	echo "Building $distro hipSYCL base via spack"
-	sudo -E singularity exec --writable --no-home $HIPSYCL_PKG_CONTAINER_DIR/base-$distro.sif bash /install-base-spack.sh
+	sudo -E singularity exec --writable --no-home \
+  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-llvm.sh
+	sudo -E singularity exec --writable --no-home \
+  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-boost.sh
+	sudo -E singularity exec --writable --no-home \
+  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-rocm.sh
 done
 
-
-#echo "Building Ubuntu 18.04 image..."
-#sudo -E singularity build --sandbox -F $HIPSYCL_PKG_CONTAINER_DIR/base-ubuntu-18.04.sif base-ubuntu-18.04.def
-#echo "Building CentOS 7 image..."
-#sudo -E singularity build --sandbox -F $HIPSYCL_PKG_CONTAINER_DIR/base-centos-7.sif base-centos-7.def

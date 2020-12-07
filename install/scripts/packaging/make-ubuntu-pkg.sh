@@ -21,7 +21,7 @@ Version: ${HIPSYCL_VERSION_STRING}
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: hipsycl-base${HIPSYCL_PKG_NAME_SUFFIX}  (>= 0.8), python3 (>= 3.0), libboost-fiber-dev, libboost-context-dev, libboost-filesystem-dev
+Depends: hipsycl-base${HIPSYCL_PKG_NAME_SUFFIX}  (>= 0.8), python3 (>= 3.0) 
 Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 Description: hipSYCL${HIPSYCL_VERSION_STRING}
  Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs 

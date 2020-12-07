@@ -9,8 +9,8 @@ export HIPSYCL_INSTALL_PREFIX=${HIPSYCL_INSTALL_PREFIX:-/opt/hipSYCL/ }
 set -e
 HIPSYCL_BUILD_DIR=${HIPSYCL_BUILD_DIR:-/tmp/hipsycl-installer-sbalint}
 HIPSYCL_REPO_USER=${HIPSYCL_REPO_USER:-sbalint98}
-HIPSYCL_REPO_BRANCH=${HIPSYCL_REPO_BRANCH:-spack-packaging}
-HIPSYCL_WITH_CUDA=${HIPSYCL_WITH_CUDA:-OFF}
+HIPSYCL_REPO_BRANCH=${HIPSYCL_REPO_BRANCH:-expose_link_comp_args_boost}
+HIPSYCL_WITH_CUDA=${HIPSYCL_WITH_CUDA:-ON}
 HIPSYCL_WITH_ROCM=${HIPSYCL_WITH_ROCM:-ON}
 
 LLVM_INCLUDE_PATH=$HIPSYCL_INSTALL_PREFIX/llvm/llvm/lib/clang/${HIPSYCL_PKG_LLVM_VERSION_MAJOR}.\
@@ -44,11 +44,12 @@ spack load llvm
 rocm_path=/opt/hipSYCL/rocm/
 cmake \
 -DCMAKE_C_COMPILER=/opt/hipSYCL/llvm/llvm/bin/clang \
--DCMAKE_CXX_COMPILER=/opt/hipSYCL/llvm/llvm/bin/clang++ \
+-DCMAKE_CXX_COMPILER=/opt/hipSYCL/llvm/llvm/bin/clang++  \
+-DCMAKE_CXX_FLAGS=-D__APPLE__ \
 -DWITH_CPU_BACKEND=ON \
 -DWITH_CUDA_BACKEND=$HIPSYCL_WITH_CUDA \
 -DWITH_ROCM_BACKEND=$HIPSYCL_WITH_ROCM \
--DLLVM_DIR=/opt/hipSYCL/llvm/llvm/lib/cmake/llvm \
+-DLLVM_DIR=/opt/hipSYCL/llvm/llvm/ \
 -DROCM_PATH=/opt/hipSYCL/rocm \
 -DBOOST_PATH=/opt/hipSYCL/boost/boost \
 -DCUDA_TOOLKIT_ROOT_DIR=/opt/hipSYCL/cuda \
