@@ -51,7 +51,7 @@ for HIPSYCL_WITH_ROCM in OFF ON ; do
     grep -i hipsycl $HIPSYCL_TEST_LOG_DIR/out >> $log_file
   done 
   echo "Start testing" >> $log_file
-  HIPSYCL_PKG_CONTAINER_DIR=$HIPSYCL_TEST_DIR `pwd`/test_installation.sh 
+  HIPSYCL_PKG_CONTAINER_DIR=$HIPSYCL_TEST_DIR `pwd`/test-installation.sh `pwd`
   for distro in ${distros[@]}; do
     sudo singularity exec --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro \
       ${cleanup_cmd[$distro]}${pkg_suffix[$dict_key]}$HIPSYCL_PKG_TYPE\

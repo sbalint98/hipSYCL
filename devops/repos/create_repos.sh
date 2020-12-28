@@ -11,5 +11,8 @@ sudo -E singularity exec -B $HIPSYCL_PKG_REPO_BASE_DIR:/data/repos/ -B $HIPSYCL_
 sudo -E singularity exec -B $HIPSYCL_PKG_REPO_BASE_DIR:/data/repos/ -B $HIPSYCL_PKG_DEVOPS_DIR:$HIPSYCL_PKG_DEVOPS_DIR \
      $SINGULARITY_BASE_DIR/ubuntu-18.04.sif bash $HIPSYCL_PKG_SCRIPT_DIR/create_ubuntu_repo.sh
 
+SINGULARITYENV_DIST=focal sudo -E singularity exec -B $HIPSYCL_PKG_REPO_BASE_DIR:/data/repos/ -B $HIPSYCL_PKG_DEVOPS_DIR:$HIPSYCL_PKG_DEVOPS_DIR \
+     $SINGULARITY_BASE_DIR/ubuntu-18.04.sif bash $HIPSYCL_PKG_SCRIPT_DIR/create_ubuntu_repo.sh
+
 sudo -E singularity exec -B $HIPSYCL_PKG_REPO_BASE_DIR:/data/repos/ -B $HIPSYCL_PKG_DEVOPS_DIR:$HIPSYCL_PKG_DEVOPS_DIR \
      $SINGULARITY_BASE_DIR/arch.sif sh $HIPSYCL_PKG_SCRIPT_DIR/create_arch_repo.sh

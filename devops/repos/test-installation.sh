@@ -1,5 +1,7 @@
 #!/bin/bash 
 set -e 
+cd $1
+source ./common/init.sh
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 
 cmake_path=/opt/hipSYCL/llvm/cmake/bin/cmake
@@ -30,7 +32,7 @@ mkdir -p /tmp/hipSYCL-test/tests/build hipSYCL-test
 rm -rf /tmp/build
 mkdir -p /tmp/build
 
-for distro in archlinux-rolling centos-7 ubuntu-18.04; do
+for distro in ${distros[@]}; do
   for target in ${targets[@]}; do
     echo "Starting test for $target for $distro" >> $log_file
     singularity exec --cleanenv  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro   \

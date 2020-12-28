@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+#set -e
 
 # We assume that the packages are already signed
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"

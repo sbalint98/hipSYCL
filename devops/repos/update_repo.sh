@@ -68,12 +68,12 @@ bash $HIPSYCL_PKG_SCRIPT_DIR_ABS/rebuild-base-images.sh
 [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON" ] && [ "$HIPSYCL_PKG_NO_BUILD" = "OFF" ] && \
 bash $HIPSYCL_PKG_SCRIPT_DIR_ABS/rebuild-hipsycl-images.sh
 
-[ "$HIPSYCL_PKG_TEST" = "ON" ] &&  bash $HIPSYCL_PKG_DEVOPS_DIR/test_installation.sh
+[ "$HIPSYCL_PKG_TEST" = "ON" ] &&  bash $HIPSYCL_PKG_DEVOPS_DIR/test_installation.sh $HIPSYCL_PKG_DEVOPS_DIR
 
 [ "$HIPSYCL_PKG_PACKAGE" = "ON" ] && bash $HIPSYCL_PKG_DEVOPS_DIR/create_pkgs.sh
 
 [ "$HIPSYCL_PKG_DEPLOY" = "ON" ] && bash $HIPSYCL_PKG_DEVOPS_DIR/create_repos.sh
 
-[ "$HIPSYCL_PKG_TEST_PKG" = "ON" ] && bash $HIPSYCL_PKG_DEVOPS_DIR/test-packages.sh
+[ "$HIPSYCL_PKG_TEST_PKG" = "ON" ] && bash $HIPSYCL_PKG_DEVOPS_DIR/test-packages.sh $HIPSYCL_PKG_DEVOPS_DIR
 # cleanup
 rm -rf /data/sbalint/singularity_tmp/*

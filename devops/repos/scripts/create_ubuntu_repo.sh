@@ -7,7 +7,7 @@ source $DIR/../common/init.sh
 UBUNTU_REPO_DIR=${UBUNTU_REPO_DIR:-/data/repos/deb}
 DIST=${DIST:-bionic}
 
-PKG_PATH=$UBUNTU_REPO_DIR/dists/bionic/main/binary-amd64/
+PKG_PATH=$UBUNTU_REPO_DIR/dists/$DIST/main/binary-amd64/
 RELEASE_PATH=$UBUNTU_REPO_DIR/dists/$DIST/
 POOL_PATH=$UBUNTU_REPO_DIR/pool/
 
