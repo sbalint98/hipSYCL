@@ -3,6 +3,7 @@ set -e
 cd $1
 source ./common/init.sh
 slurm_out=$1/slurm-$SLURM_JOB_ID.out
+target_repo=${2:-"/test_spack_build"}
 echo $slurm_out 
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 HIPSYCL_TEST_LOG_DIR=${HIPSYCL_TEST_LOG_DIR:-/tmp/hipsycl-logs}
@@ -22,7 +23,7 @@ for distro in ${distros[@]}; do
     || echo "image_build_failed" >> $log_file
   echo "Setting up image for: $distro" >> $log_file
   singularity exec --fakeroot --writable  -B ../../install/scripts:/mnt \
-    $HIPSYCL_TEST_DIR/hipsycl-$distro sh /mnt/add-repo-$distro.sh /test_spack_build \
+    $HIPSYCL_TEST_DIR/hipsycl-$distro sh /mnt/add-repo-$distro.sh $target_repo \
     && echo "add_distro_succesful" >> $log_file \
     || echo "add_distro_failed" >> $log_file
 done
