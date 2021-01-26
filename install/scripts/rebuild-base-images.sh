@@ -36,13 +36,13 @@ supported_distros=("archlinux-rolling" "centos-7" "ubuntu-18.04")
 for distro in "${supported_distros[@]}"
 do
 	echo "Building $distro image... with base pkgs"
-	sudo -E singularity build --sandbox -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro base-$distro.def
+	singularity build --fakeroot --sandbox -F $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro base-$distro.def
 	echo "Building $distro hipSYCL base via spack"
-	sudo -E singularity exec --writable --no-home \
+	singularity exec  --fakeroot --writable --no-home \
   $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-llvm.sh
-	sudo -E singularity exec --writable --no-home \
+	singularity exec  --fakeroot --writable --no-home \
   $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-boost.sh
-	sudo -E singularity exec --writable --no-home \
+	singularity exec  --fakeroot --writable --no-home \
   $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-rocm.sh
 done
 

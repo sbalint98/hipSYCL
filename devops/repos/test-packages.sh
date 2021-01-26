@@ -17,11 +17,11 @@ echo "Starting comprehensive testing of the package repositories for ${distros[*
 
 for distro in ${distros[@]}; do
   echo "Building new image for $distro" >> $log_file
-  sudo singularity build --force --sandbox  $HIPSYCL_TEST_DIR/hipsycl-$distro ${image_base[$distro]} \
+  singularity build --fakeroot --force --sandbox  $HIPSYCL_TEST_DIR/hipsycl-$distro ${image_base[$distro]} \
     && echo "image_build_succesful" >> $log_file \
     || echo "image_build_failed" >> $log_file
   echo "Setting up image for: $distro" >> $log_file
-  sudo singularity exec --writable  -B ../../install/scripts:/mnt \
+  singularity exec --fakeroot --writable  -B ../../install/scripts:/mnt \
     $HIPSYCL_TEST_DIR/hipsycl-$distro sh /mnt/add-repo-$distro.sh /test_spack_build \
     && echo "add_distro_succesful" >> $log_file \
     || echo "add_distro_failed" >> $log_file
@@ -35,14 +35,14 @@ for HIPSYCL_WITH_ROCM in OFF ON ; do
   for distro in ${distros[@]}; do
     echo "Setting up image for: $distro" >> $log_file
     if [ "$HIPSYCL_WITH_CUDA" = "ON" ]; then
-       sudo singularity exec --writable  -B ../../install/scripts:/mnt \
+       singularity exec --fakeroot --writable  -B ../../install/scripts:/mnt \
          $HIPSYCL_TEST_DIR/hipsycl-$distro sh /mnt/install-cuda.sh \
          && echo "cuda_install_succesful" >> $log_file \
          || echo "cuda_install_failed" >> $log_file
     else
       echo "cuda_install_skipped" >> $log_file
     fi
-    sudo singularity exec --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro \
+    singularity exec --fakeroot --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro \
       ${install_cmd[$distro]}${pkg_suffix[$dict_key]}$HIPSYCL_PKG_TYPE \
       > $HIPSYCL_TEST_LOG_DIR/out \
       && echo "pkg_install_succesful" >> $log_file \
@@ -53,17 +53,17 @@ for HIPSYCL_WITH_ROCM in OFF ON ; do
   echo "Start testing" >> $log_file
   HIPSYCL_PKG_CONTAINER_DIR=$HIPSYCL_TEST_DIR `pwd`/test-installation.sh `pwd`
   for distro in ${distros[@]}; do
-    sudo singularity exec --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro \
+    singularity exec --fakeroot --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro \
       ${cleanup_cmd[$distro]}${pkg_suffix[$dict_key]}$HIPSYCL_PKG_TYPE\
       && echo "$distro pkg_cleanup_succesful" >> $log_file \
       || echo "$distro pkg_cleanup_failed" >> $log_file
   
-    sudo singularity exec --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro \
+    singularity exec --fakeroot --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro \
       ${cleanup_dep[$distro]} \
       && echo "$distro pkg_dep_cleanup_succesful" >> $log_file \
       || echo "$distro pkg_dep_cleanup_failed" >> $log_file
 
-     sudo singularity exec --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro rm -rf /opt/hipSYCL/cuda
+     singularity exec --fakeroot --writable  $HIPSYCL_TEST_DIR/hipsycl-$distro rm -rf /opt/hipSYCL/cuda
   done
 done
 done

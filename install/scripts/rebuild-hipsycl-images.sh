@@ -33,6 +33,6 @@ for distro in "${supported_distros[@]}"
 do
   echo "Installing hipSYCL into image for $distro at $HIPSYCL_PKG_CONTAINER_DIR/$distro"
   sudo rm -rf /tmp/hipsycl-installer-sbalint/
-  sudo -E singularity exec --writable --no-home  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-hipsycl.sh
+  singularity exec --fakeroot --writable --no-home  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-hipsycl.sh
 done
 
