@@ -13,6 +13,6 @@ for f in *.tar.zst
 do
 	mv $f $ARCH_REPO_DIR
 	mv $f.sig $ARCH_REPO_DIR
-	repo-add --sign $ARCH_REPO_DIR/hipsycl.db.tar $ARCH_REPO_DIR/$f
+	repo-add --sign -k B2B75080 $ARCH_REPO_DIR/hipsycl.db.tar $ARCH_REPO_DIR/$f
 done
 

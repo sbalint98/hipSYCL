@@ -35,6 +35,6 @@ apt-ftparchive release .  | tee $RELEASE_PATH/Release
 echo `pwd`
 rm Release.gpg
 rm InRelease
-gpg -abs -o Release.gpg Release
-gpg --clearsign -o InRelease Release
+gpg --default-key B2B75080 -abs -o Release.gpg Release
+gpg --default-key B2B75080 --clearsign -o InRelease Release
 
