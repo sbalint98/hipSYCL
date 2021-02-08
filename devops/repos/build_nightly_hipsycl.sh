@@ -4,15 +4,14 @@ cd $1
 set -e
 pwd
 source ./common/init.sh
-install_dir=/data/sbalint/test_spack_build_10
-repo_dir=/data/repos/test_spack_build
+install_dir=${2:-/data/hipsycl-builds/}
+repo_dir=${3:-/data/repos/}
 
 for cuda_state in ON OFF; do
   for rocm_state in ON OFF; do
     dict_key="$rocm_state$cuda_state"
     echo $dict_key
     echo "${pkg_suffix[$dict_key]}"
-    
     HIPSYCL_PKG_LLVM_REPO_BRANCH=release/10.x \
     HIPSYCL_PKG_LLVM_VERSION_MAJOR=11 \
     HIPSYCL_PKG_LLVM_VERSION_MINOR=0 \
@@ -30,8 +29,8 @@ for cuda_state in ON OFF; do
     HIPSYCL_WITH_ROCM=$rocm_state \
     HIPSYCL_PKG_TYPE="-nightly" \
     HIPSYCL_PKG_NAME_SUFFIX="${pkg_suffix[$dict_key]}$HIPSYCL_PKG_TYPE" \
-    HIPSYCL_REPO_BRANCH=spack-pkgs-tests \
-    HIPSYCL_REPO_USER=sbalint98 \
+    HIPSYCL_REPO_BRANCH=develop \
+    HIPSYCL_REPO_USER=illuhad \
     bash ./update_repo.sh
   done
 done

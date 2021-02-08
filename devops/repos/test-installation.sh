@@ -10,7 +10,8 @@ mkdir -p $HIPSYCL_TEST_LOG_DIR
 HIPSYCL_TEST_CUDA_ARCH=${HIPSYCL_TEST_CUDA_ARCH:-sm_61}
 HIPSYCL_TEST_ROCM_ARCH=${HIPSYCL_TEST_ROCM_ARCH:-gfx900}
 
-log_file=${log_file:-HIPSYCL_TEST_LOG_DIR/hipSYCL_image_test-$current_time}
+log_file=${log_file:-$HIPSYCL_TEST_LOG_DIR/hipSYCL_image_test-$current_time}
+touch $log_file
 slurm_out=${slurm_out:-$log_file}
 
 targets=( "omp" )

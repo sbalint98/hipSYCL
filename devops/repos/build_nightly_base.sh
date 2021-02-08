@@ -4,8 +4,8 @@ cd $1
 set -e
 pwd
 source ./common/init.sh
-install_dir=/data/sbalint/test_spack_build_fakeroot
-repo_dir=/data/repos/test_spack_build
+install_dir=${2:-/data/hipsycl-builds/}
+repo_dir=${3:-/data/repos/}
 
 HIPSYCL_PKG_LLVM_REPO_BRANCH=release/10.x \
 HIPSYCL_PKG_LLVM_VERSION_MAJOR=11 \

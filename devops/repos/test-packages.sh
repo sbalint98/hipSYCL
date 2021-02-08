@@ -3,7 +3,7 @@ set -e
 cd $1
 source ./common/init.sh
 slurm_out=$1/slurm-$SLURM_JOB_ID.out
-target_repo=${2:-"/test_spack_build"}
+target_repo=${2:-""}
 echo $slurm_out 
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 HIPSYCL_TEST_LOG_DIR=${HIPSYCL_TEST_LOG_DIR:-/tmp/hipsycl-logs}
