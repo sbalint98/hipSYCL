@@ -14,4 +14,3 @@ cp ./spack-syclcc.json ${SINGULARITY_ROOTFS}/syclcc.json
 [ "$HIPSYCL_PKG_BUILD_CUDA" = "ON" ] && bash /install-cuda.sh || echo "Not building CUDA"
 pacman -Syu --noconfirm
 pacman -S --noconfirm unzip sed wget git python3 parallel tar perl base-devel cmake curl	
-bash /install-cuda.sh 

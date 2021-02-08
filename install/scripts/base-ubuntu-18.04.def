@@ -15,5 +15,5 @@ cp ./spack-syclcc.json ${SINGULARITY_ROOTFS}/syclcc.json
 apt update
 apt install -y sed unzip wget gcc g++ git python3 parallel perl perl-modules cmake curl
 
-bash /install-cuda.sh 
+#bash /install-cuda.sh 
 #bash /install-base-spack.sh

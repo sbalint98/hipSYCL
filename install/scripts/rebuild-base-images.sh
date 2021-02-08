@@ -44,5 +44,7 @@ do
   $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-boost.sh
 	singularity exec  --fakeroot --writable --no-home \
   $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-rocm.sh
+	singularity exec  --fakeroot --writable --no-home \
+  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /install-cuda.sh
 done
 

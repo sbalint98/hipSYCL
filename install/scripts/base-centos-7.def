@@ -25,6 +25,6 @@ yum install lbzip2 -y
 #We neeed proper cmake 
 yum remove cmake
 ln -s /usr/bin/cmake3 /usr/bin/cmake
-bash /install-cuda.sh
+#bash /install-cuda.sh
 #bash /install-base-spack.sh
 
