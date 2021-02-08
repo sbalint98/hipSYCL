@@ -15,7 +15,7 @@ mkdir -p ${RPM_ROOT}/{SOURCES,BUILD,RPMS,SPECS,SRPMS,tmp}
 
 [ "$HIPSYCL_WITH_ROCM" = "ON" ] &&  rocm_dep=", hipSYCL-base-rocm${HIPSYCL_PKG_TYPE}"
 
-cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL.spec
+cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL${HIPSYCL_PKG_NAME_SUFFIX}.spec
 Summary: Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs
 Name: hipSYCL${HIPSYCL_PKG_NAME_SUFFIX}
 Version: ${HIPSYCL_VERSION}
@@ -24,7 +24,7 @@ License: BSD
 Packager: Aksel Alpay
 Group: Development/Tools
 BuildRequires: coreutils
-BuildRoot: ${RPM_ROOT}/tmp/hipSYCL-${HIPSYCL_VERSION_STRING}
+BuildRoot: ${RPM_ROOT}/tmp/hipSYCL${HIPSYCL_PKG_NAME_SUFFIX}-${HIPSYCL_VERSION_STRING}
 Requires: python3, hipSYCL-base${HIPSYCL_PKG_TYPE} $rocm_dep
 AutoReq: no
 
@@ -41,6 +41,54 @@ cp -R ${HIPSYCL_DIR}/* %{buildroot}
 /opt/hipSYCL/lib
 /opt/hipSYCL/include
 /opt/hipSYCL/etc
+
+EOF
+
+cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL${HIPSYCL_PKG_TYPE}.spec
+Summary: Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs
+Name: hipSYCL${HIPSYCL_PKG_TYPE}
+Version: ${HIPSYCL_VERSION}
+Release: ${HIPSYCL_BUILD}
+License: BSD
+Packager: Aksel Alpay
+Group: Development/Tools
+BuildRequires: coreutils
+BuildRoot: ${RPM_ROOT}/tmp/hipSYCL-${HIPSYCL_VERSION_STRING}
+Requires: hipSYCL-omp-rocm-cuda
+AutoReq: no
+
+%description
+%{summary}
+
+%install
+
+%global __python %{__python3}
+
+%files
+
+EOF
+
+cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL-full${HIPSYCL_PKG_TYPE}.spec
+Summary: Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs
+Name: hipSYCL-full${HIPSYCL_PKG_TYPE}
+Version: ${HIPSYCL_VERSION}
+Release: ${HIPSYCL_BUILD}
+License: BSD
+Packager: Aksel Alpay
+Group: Development/Tools
+BuildRequires: coreutils
+BuildRoot: ${RPM_ROOT}/tmp/hipSYCL-${HIPSYCL_VERSION_STRING}
+Requires: hipSYCL-omp-rocm-cuda
+AutoReq: no
+
+%description
+%{summary}
+
+%install
+
+%global __python %{__python3}
+
+%files
 
 EOF
 
@@ -127,6 +175,8 @@ cd ${RPM_ROOT}/SPECS
 
 if [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON"  ]; then
 rpmbuild -bb hipSYCL${HIPSYCL_PKG_NAME_SUFFIX}.spec
+rpmbuild -bb hipSYCL-full${HIPSYCL_PKG_TYPE}.spec
+rpmbuild -bb hipSYCL${HIPSYCL_PKG_TYPE}.spec
 fi
 
 if [ "$HIPSYCL_PKG_BUILD_BASE" = "ON"  ]; then

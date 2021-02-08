@@ -24,6 +24,8 @@ mkdir -p ${CUDA_DIR}/pkg
 mkdir -p ${ROCM_DIR}/pkg
 mkdir -p ${COMMON_DIR}/pkg
 mkdir -p ${HIPSYCL_DIR}/pkg
+mkdir -p ${HIPSYCL_FULL_DIR}/pkg
+mkdir -p ${HIPSYCL_META_DIR}/pkg
 
 mv ${BUILD_DIR}/cuda-pkg.tar.gz ${CUDA_DIR}/pkg/
 mv ${BUILD_DIR}/rocm-pkg.tar.gz ${ROCM_DIR}/pkg/
@@ -92,7 +94,33 @@ package() {
 }
 EOF
 
+cat << EOF > ${HIPSYCL_FULL_DIR}/pkg/PKGBUILD
+# Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
+pkgname=hipSYCL-full${HIPSYCL_PKG_TYPE}
+pkgver=${HIPSYCL_VERSION}
+pkgrel=${HIPSYCL_BUILD}
+pkgdesc="Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs"
+arch=('x86_64')
+url="https://github.com/illuhad/hipSYCL"
+license=('LLVM')
+depends=( 'hipSYCL-omp-rocm-cuda${HIPSYCL_PKG_TYPE}' )
+provides=( 'hipSYCL-full${HIPSYCL_PKG_TYPE}' )
 
+EOF
+
+cat << EOF > ${HIPSYCL_META_DIR}/pkg/PKGBUILD
+# Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
+pkgname=hipSYCL${HIPSYCL_PKG_TYPE}
+pkgver=${HIPSYCL_VERSION}
+pkgrel=${HIPSYCL_BUILD}
+pkgdesc="Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs"
+arch=('x86_64')
+url="https://github.com/illuhad/hipSYCL"
+license=('LLVM')
+depends=( 'hipSYCL-omp-rocm-cuda${HIPSYCL_PKG_TYPE}' )
+provides=( 'hipSYCL${HIPSYCL_PKG_TYPE}' )
+
+EOF
 
 cat << EOF > ${CUDA_DIR}/pkg/PKGBUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
@@ -106,8 +134,6 @@ license=('NVIDIA CUDA EULA')
 depends=()
 provides=('cuda')
 source=('cuda-pkg.tar.gz')
-md5sums=()
-validpgpkeys=()
 
 
 package() {
@@ -117,6 +143,8 @@ EOF
 
 if [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON" ]; then
 cd ${HIPSYCL_DIR}/pkg && makepkg -d -c --skipinteg  $SIGN
+cd ${HIPSYCL_META_DIR}/pkg && makepkg -d -c --skipinteg  $SIGN
+cd ${HIPSYCL_FULL_DIR}/pkg && makepkg -d -c --skipinteg  $SIGN
 fi
 
 if [ "$HIPSYCL_PKG_BUILD_BASE" = "ON" ]; then

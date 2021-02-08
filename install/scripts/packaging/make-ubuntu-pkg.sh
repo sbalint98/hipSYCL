@@ -16,6 +16,8 @@ mkdir -p ${CUDA_DIR}/DEBIAN
 mkdir -p ${ROCM_DIR}/DEBIAN
 mkdir -p ${COMMON_DIR}/DEBIAN
 mkdir -p ${HIPSYCL_DIR}/DEBIAN
+mkdir -p ${HIPSYCL_META_DIR}/DEBIAN
+mkdir -p ${HIPSYCL_FULL_DIR}/DEBIAN
 
 cat << EOF > ${HIPSYCL_DIR}/DEBIAN/control 
 Package: hipsycl${HIPSYCL_PKG_NAME_SUFFIX}
@@ -52,6 +54,31 @@ Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 Description: ROCm compiler stack for hipSYCL${HIPSYCL_PKG_TYPE}  Provides ROCm libraries for hipSYCL
 EOF
 
+
+cat << EOF > ${HIPSYCL_FULL_DIR}/DEBIAN/control
+Package: hipsycl-full${HIPSYCL_PKG_TYPE}
+Version: ${HIPSYCL_VERSION_STRING}
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: hipsycl-omp-rocm-cuda${HIPSYCL_PKG_TYPE} 
+Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
+Description:  Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs 
+
+EOF
+
+cat << EOF > ${HIPSYCL_META_DIR}/DEBIAN/control
+Package: hipsycl${HIPSYCL_PKG_TYPE}
+Version: ${HIPSYCL_VERSION_STRING}
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: hipsycl-omp-rocm-cuda${HIPSYCL_PKG_TYPE} 
+Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
+Description:  Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs 
+
+EOF
+
 cat << EOF > ${CUDA_DIR}/DEBIAN/control
 Package: hipsycl-cuda${HIPSYCL_PKG_TYPE}
 Version: ${HIPSYCL_VERSION_STRING}
@@ -75,6 +102,8 @@ fi
 
 if [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON" ]; then
 dpkg-deb --build ${HIPSYCL_PKG}
+dpkg-deb --build ${HIPSYCL_META_PKG}
+dpkg-deb --build ${HIPSYCL_FULL_PKG}
 fi
 
 if [ "$HIPSYCL_PKG_BUILD_CUDA" = "ON" ]; then
