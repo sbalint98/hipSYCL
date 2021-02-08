@@ -1,5 +1,5 @@
 #!/bin/bash 
-
+pacman -Syu
 pacman -Sy --noconfirm awk wget make base-devel
 
 echo '[hipsycl]' >> /etc/pacman.conf
