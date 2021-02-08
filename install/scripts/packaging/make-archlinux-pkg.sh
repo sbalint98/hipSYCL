@@ -30,7 +30,7 @@ mv ${BUILD_DIR}/rocm-pkg.tar.gz ${ROCM_DIR}/pkg/
 mv ${BUILD_DIR}/common-pkg.tar.gz ${COMMON_DIR}/pkg/
 mv ${BUILD_DIR}/hipsycl-pkg.tar.gz ${HIPSYCL_DIR}/pkg/
 
-[ "$HIPSYCL_WITH_ROCM" = "ON" ] &&  rocm_dep="'hipSYCL-rocm${HIPSYCL_PKG_TYPE}'"
+[ "$HIPSYCL_WITH_ROCM" = "ON" ] &&  rocm_dep="'hipSYCL-base-rocm${HIPSYCL_PKG_TYPE}'"
 cat << EOF > ${HIPSYCL_DIR}/pkg/PKGBUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 pkgname=hipSYCL${HIPSYCL_PKG_NAME_SUFFIX}
@@ -73,7 +73,7 @@ EOF
 
 cat << EOF > ${ROCM_DIR}/pkg/PKGBUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
-pkgname=hipSYCL-rocm${HIPSYCL_PKG_TYPE}
+pkgname=hipSYCL-base-rocm${HIPSYCL_PKG_TYPE}
 pkgver=${HIPSYCL_VERSION}
 pkgrel=${HIPSYCL_BUILD}
 pkgdesc="ROCm compiler stack and libraries for hipSYCL"

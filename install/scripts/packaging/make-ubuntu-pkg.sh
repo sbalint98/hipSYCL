@@ -10,7 +10,7 @@ HIPSYCL_PKG_BUILD_HIPSYCL=${HIPSYCL_PKG_BUILD_HIPSYCL:-ON}
 HIPSYCL_PKG_BUILD_ROCM=${HIPSYCL_PKG_BUILD_ROCM:-ON}
 HIPSYCL_PKG_BUILD_CUDA=${HIPSYCL_PKG_BUILD_CUDA:-OFF}
 
-[ "$HIPSYCL_WITH_ROCM" = "ON" ] &&  rocm_dep=", hipsycl-rocm${HIPSYCL_PKG_TYPE}   (>= 0.8)"
+[ "$HIPSYCL_WITH_ROCM" = "ON" ] &&  rocm_dep=", hipsycl-base-rocm${HIPSYCL_PKG_TYPE}   (>= 0.8)"
 
 mkdir -p ${CUDA_DIR}/DEBIAN
 mkdir -p ${ROCM_DIR}/DEBIAN
@@ -42,7 +42,7 @@ Description: hipSYCL base compiler stack
 EOF
 
 cat << EOF > ${ROCM_DIR}/DEBIAN/control
-Package: hipsycl-rocm${HIPSYCL_PKG_TYPE}
+Package: hipsycl-base-rocm${HIPSYCL_PKG_TYPE}
 Version: ${HIPSYCL_VERSION_STRING}
 Section: base
 Priority: optional

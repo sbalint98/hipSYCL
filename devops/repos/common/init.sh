@@ -39,7 +39,7 @@ declare -A image_base=( ["archlinux-rolling"]="docker://archlinux/base" \
                       )
 
 #Order of on-off: ROCM, CUDA
-declare  -A pkg_suffix=( ["ONON"]="" ["OFFOFF"]="-omp" ["OFFON"]="-omp-cuda" \
+declare  -A pkg_suffix=( ["ONON"]="omp-rocm-cuda" ["OFFOFF"]="-omp" ["OFFON"]="-omp-cuda" \
                          ["ONOFF"]="-omp-rocm")
 
 distros=( "centos-7" "archlinux-rolling" "ubuntu-18.04" "ubuntu-20.04")

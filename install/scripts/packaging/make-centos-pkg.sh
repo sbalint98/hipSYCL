@@ -13,7 +13,7 @@ HIPSYCL_PKG_BUILD_CUDA=${HIPSYCL_PKG_BUILD_CUDA:-OFF}
 RPM_ROOT=${BUILD_DIR}/rpm
 mkdir -p ${RPM_ROOT}/{SOURCES,BUILD,RPMS,SPECS,SRPMS,tmp}
 
-[ "$HIPSYCL_WITH_ROCM" = "ON" ] &&  rocm_dep=", hipSYCL-rocm${HIPSYCL_PKG_TYPE}"
+[ "$HIPSYCL_WITH_ROCM" = "ON" ] &&  rocm_dep=", hipSYCL-base-rocm${HIPSYCL_PKG_TYPE}"
 
 cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL.spec
 Summary: Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs
@@ -71,9 +71,9 @@ cp -R ${COMMON_DIR}/* %{buildroot}
 
 EOF
 
-cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL-rocm.spec
+cat << EOF > ${RPM_ROOT}/SPECS/hipSYCL-base-rocm.spec
 Summary: ROCm stack for hipSYCL
-Name: hipSYCL-rocm${HIPSYCL_PKG_TYPE}
+Name: hipSYCL-base-rocm${HIPSYCL_PKG_TYPE}
 Version: ${HIPSYCL_VERSION}
 Release: ${HIPSYCL_BUILD}
 License: LLVM
@@ -126,7 +126,7 @@ EOF
 cd ${RPM_ROOT}/SPECS
 
 if [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON"  ]; then
-rpmbuild -bb hipSYCL.spec
+rpmbuild -bb hipSYCL${HIPSYCL_PKG_NAME_SUFFIX}.spec
 fi
 
 if [ "$HIPSYCL_PKG_BUILD_BASE" = "ON"  ]; then
@@ -134,7 +134,7 @@ rpmbuild -bb hipSYCL-base.spec
 fi
 
 if [ "$HIPSYCL_PKG_BUILD_ROCM" = "ON"  ]; then
-rpmbuild -bb hipSYCL-rocm.spec
+rpmbuild -bb hipSYCL-base-rocm.spec
 fi
 
 if [ "$HIPSYCL_PKG_BUILD_CUDA" = "ON"  ]; then
