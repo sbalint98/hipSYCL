@@ -47,7 +47,7 @@ for distro in ${distros[@]}; do
         || echo "cmake_failed (`wc -l $slurm_out | awk -F' ' '{print $1}' `)" >> $log_file || exit 1  
      
 
-    VERBOSE=1  singularity exec \
+    VERBOSE=1 CUDA_VISIBLE_DEVICES=0 singularity exec --nv \
         -H /tmp/build $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro \
         make  -j 16 && echo "build_successful (`wc -l $slurm_out | awk -F' ' '{print $1}' `)" >> $log_file \
         || echo "build_failed (`wc -l $slurm_out | awk -F' ' '{print $1}' `)" >> $log_file  || exit 1    
