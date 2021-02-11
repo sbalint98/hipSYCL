@@ -34,6 +34,11 @@ target_include_directories(hipSYCL-rt
     ${PROJECT_BINARY_DIR}/include
 )
 
+target_link_libraries(hipSYCL-rt
+  PRIVATE
+    ${Boost_LIBRARIES}
+)
+
 install(TARGETS hipSYCL-rt
         EXPORT install_exports
         LIBRARY DESTINATION lib
