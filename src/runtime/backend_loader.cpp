@@ -31,7 +31,7 @@
 #include "hipSYCL/common/config.hpp"
 
 #include <cassert>
-#include <filesystem>
+#include <boost/filesystem.hpp>
 #include <dlfcn.h>
 
 namespace {
