@@ -11,7 +11,7 @@ HIPSYCL_GPG_KEY=${HIPSYCL_GPG_KEY:-B2B75080}
 BUILD_DIR=${HIPSYCL_PACKAGING_DIR:-/tmp/hipsycl-packages}
 
 #Base packages
-CUDA_PKG=hipSYCL-cuda${HIPSYCL_PKG_TYPE}-${HIPSYCL_VERSION_STRING}
+CUDA_PKG=hipSYCL-base-cuda${HIPSYCL_PKG_TYPE}-${HIPSYCL_VERSION_STRING}
 ROCM_PKG=hipSYCL-base-rocm${HIPSYCL_PKG_TYPE}-${HIPSYCL_VERSION_STRING}
 COMMON_PKG=hipSYCL-base${HIPSYCL_PKG_TYPE}-${HIPSYCL_VERSION_STRING}
 
@@ -71,9 +71,9 @@ cp -R /opt/hipSYCL/bin     ${HIPSYCL_CORE_DIR}/opt/hipSYCL || true
 cp -R /opt/hipSYCL/etc     ${HIPSYCL_CORE_DIR}/opt/hipSYCL || true
 cp -R /opt/hipSYCL/include ${HIPSYCL_CORE_DIR}/opt/hipSYCL || true
 cp -R /opt/hipSYCL/lib     ${HIPSYCL_CORE_DIR}/opt/hipSYCL || true
-rm -rf /opt/hipSYCL/lib/hipSYCL/* || true
+rm -rf ${HIPSYCL_CORE_DIR}/opt/hipSYCL/lib/hipSYCL/* || true
 
-cp -R /opt/hipSYCL/lib/librt-backend-cuda.so ${HIPSYCL_CUDA_DIR}/opt/hipSYCL/lib/hipSYCL || true
-cp -R /opt/hipSYCL/lib/librt-backend-hip.so ${HIPSYCL_ROCM_DIR}/opt/hipSYCL/lib/hipSYCL || true
-cp -R /opt/hipSYCL/lib/librt-backend-omp.so ${HIPSYCL_OMP_DIR}/opt/hipSYCL/lib/hipSYCL || true
+cp  /opt/hipSYCL/lib/hipSYCL/librt-backend-cuda.so ${HIPSYCL_CUDA_DIR}/opt/hipSYCL/lib/hipSYCL || true
+cp  /opt/hipSYCL/lib/hipSYCL/librt-backend-hip.so ${HIPSYCL_ROCM_DIR}/opt/hipSYCL/lib/hipSYCL || true
+cp  /opt/hipSYCL/lib/hipSYCL/librt-backend-omp.so ${HIPSYCL_OMP_DIR}/opt/hipSYCL/lib/hipSYCL || true
 

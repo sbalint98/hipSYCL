@@ -34,7 +34,7 @@ for HIPSYCL_WITH_ROCM in OFF ON ; do
   export HIPSYCL_WITH_CUDA
   export HIPSYCL_WITH_ROCM 
   for distro in ${distros[@]}; do
-    echo "Setting up image for: $distro" >> $log_file
+    echo "Installing dependencies for: $distro" >> $log_file
     if [ "$HIPSYCL_WITH_CUDA" = "ON" ]; then
        singularity exec --fakeroot --writable  -B ../../install/scripts:/mnt \
          $HIPSYCL_TEST_DIR/hipsycl-$distro sh /mnt/install-cuda.sh \

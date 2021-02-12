@@ -41,7 +41,7 @@ Version: ${HIPSYCL_VERSION_STRING}
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: hipsycl-core${HIPSYCL_PKG_TYPE}
+Depends: hipsycl-core${HIPSYCL_PKG_TYPE} (>= 0.8)
 Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 Description: hipSYCL${HIPSYCL_VERSION_STRING}
   Cuda backend for hipSYCL
@@ -53,7 +53,7 @@ Version: ${HIPSYCL_VERSION_STRING}
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: hipsycl-core${HIPSYCL_PKG_TYPE}, hipsycl-base-rocm${HIPSYCL_PKG_TYPE}  (>= 0.8), python3 (>= 3.0)
+Depends: hipsycl-core${HIPSYCL_PKG_TYPE} (>= 0.8), hipsycl-base-rocm${HIPSYCL_PKG_TYPE}  (>= 0.8), python3 (>= 3.0)
 Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 Description: hipSYCL${HIPSYCL_VERSION_STRING}
   Rocm backend for hipSYCL
@@ -65,7 +65,7 @@ Version: ${HIPSYCL_VERSION_STRING}
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: hipsycl-base${HIPSYCL_PKG_TYPE}  (>= 0.8), python3 (>= 3.0)
+Depends: hipsycl-core${HIPSYCL_PKG_TYPE} (>= 0.8), hipsycl-base${HIPSYCL_PKG_TYPE}  (>= 0.8), python3 (>= 3.0)
 Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 Description: hipSYCL${HIPSYCL_VERSION_STRING}
   omp backend for hipSYCL
@@ -101,7 +101,7 @@ Version: ${HIPSYCL_VERSION_STRING}
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: hipsycl-rocm${HIPSYCL_PKG_TYPE},  hipsycl-cuda${HIPSYCL_PKG_TYPE} 
+Depends: hipsycl-rocm${HIPSYCL_PKG_TYPE} (>= 0.8),  hipsycl-cuda${HIPSYCL_PKG_TYPE} (>= 0.8)
 Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 Description:  Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs 
 
@@ -113,14 +113,14 @@ Version: ${HIPSYCL_VERSION_STRING}
 Section: base
 Priority: optional
 Architecture: amd64
-Depends: hipsycl-full${HIPSYCL_PKG_TYPE}
+Depends: hipsycl-full${HIPSYCL_PKG_TYPE} (>= 0.8)
 Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
 Description:  Implementation of Khronos SYCL for CPUs, AMD GPUs and NVIDIA GPUs 
 
 EOF
 
 cat << EOF > ${CUDA_DIR}/DEBIAN/control
-Package: hipsycl-cuda${HIPSYCL_PKG_TYPE}
+Package: hipsycl-base-cuda${HIPSYCL_PKG_TYPE}
 Version: ${HIPSYCL_VERSION_STRING}
 Section: base
 Priority: optional

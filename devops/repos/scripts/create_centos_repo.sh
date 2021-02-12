@@ -18,4 +18,5 @@ do
 	mv $f $CENTOS_REPO_DIR
 	echo "" | setsid rpmsign --addsign $CENTOS_REPO_DIR/$f
 done
+cp $DIR/hipsycl.repo $CENTOS_REPO_DIR
 createrepo $CENTOS_REPO_DIR

@@ -28,11 +28,7 @@ cp $HIPSYCL_PKG_SCRIPT_DIR/*.def /tmp/hipsycl-pkg-builder
 cp $HIPSYCL_PKG_SCRIPT_DIR/*.sh /tmp/hipsycl-pkg-builder
 cd /tmp/hipsycl-pkg-builder
 
-supported_distros=("archlinux-rolling" "ubuntu-18.04" "centos-7")
-for distro in "${supported_distros[@]}"
-do
-  echo "Installing hipSYCL into image for $distro at $HIPSYCL_PKG_CONTAINER_DIR/$distro"
-  sudo rm -rf /tmp/hipsycl-installer-sbalint/
-  singularity exec --fakeroot --writable --no-home  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$distro bash /spack-install-hipsycl.sh
-done
+echo "Installing hipSYCL into image for $distro at $HIPSYCL_PKG_CONTAINER_DIR/$distro"
+sudo rm -rf /tmp/hipsycl-installer-sbalint/
+singularity exec --fakeroot --writable --no-home  $HIPSYCL_PKG_CONTAINER_DIR/hipsycl-$1 bash /spack-install-hipsycl.sh
 

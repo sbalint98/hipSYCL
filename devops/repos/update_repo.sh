@@ -1,11 +1,14 @@
 #!/bin/bash
 
 set -e
+set -o xtrace
 
 HIPSYCL_PKG_DEVOPS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 HIPSYCL_PKG_SCRIPT_DIR=${HIPSYCL_PKG_SCRIPT_DIR:-../../install/scripts/}
 HIPSYCL_PKG_SCRIPT_DIR_ABS=$HIPSYCL_PKG_DEVOPS_DIR/$HIPSYCL_PKG_SCRIPT_DIR
 HIPSYCL_PKG_REPO_BASE_DIR=${HIPSYCL_PKG_REPO_BASE_DIR:-/data/repos/}
+
+source $HIPSYCL_PKG_DEVOPS_DIR/common/init.sh
 
 HIPSYCL_PKG_BUILD_HIPSYCL=${HIPSYCL_PKG_BUILD_HIPSYCL:-ON}
 HIPSYCL_PKG_BUILD_CUDA=${HIPSYCL_PKG_BUILD_CUDA:-OFF}
@@ -65,14 +68,27 @@ export HIPSYCL_WITH_ROCM
 [ "$HIPSYCL_PKG_BUILD_BASE" = "ON" ] && [ "$HIPSYCL_PKG_NO_BUILD" = "OFF" ] &&  \
 bash $HIPSYCL_PKG_SCRIPT_DIR_ABS/rebuild-base-images.sh
 
-[ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON" ] && [ "$HIPSYCL_PKG_NO_BUILD" = "OFF" ] && \
-bash $HIPSYCL_PKG_SCRIPT_DIR_ABS/rebuild-hipsycl-images.sh
+if [ "$HIPSYCL_PKG_BUILD_HIPSYCL" = "ON" ]; then
+  if [ "$HIPSYCL_PKG_NO_BUILD" = "OFF" ]; then
+  for distro in "${build_distros[@]}"; do
+      bash $HIPSYCL_PKG_SCRIPT_DIR_ABS/rebuild-hipsycl-images.sh $distro
+  done
+fi
+fi
 
-[ "$HIPSYCL_PKG_TEST" = "ON" ] &&  bash $HIPSYCL_PKG_DEVOPS_DIR/test_installation.sh $HIPSYCL_PKG_DEVOPS_DIR
+#[ "$HIPSYCL_PKG_TEST" = "ON" ] &&  bash $HIPSYCL_PKG_DEVOPS_DIR/test_installation.sh $HIPSYCL_PKG_DEVOPS_DIR
 
-[ "$HIPSYCL_PKG_PACKAGE" = "ON" ] && bash $HIPSYCL_PKG_DEVOPS_DIR/create_pkgs.sh
+if [ "$HIPSYCL_PKG_PACKAGE" = "ON" ]; then
+  for distro in "${build_distros[@]}"; do
+    bash $HIPSYCL_PKG_DEVOPS_DIR/create_pkgs.sh $distro
+  done
+fi
 
-[ "$HIPSYCL_PKG_DEPLOY" = "ON" ] && bash $HIPSYCL_PKG_DEVOPS_DIR/create_repos.sh
+if [ "$HIPSYCL_PKG_DEPLOY" = "ON" ]; then 
+  for distro in "${build_distros[@]}"; do
+    bash $HIPSYCL_PKG_DEVOPS_DIR/create_repos.sh $distro
+  done
+fi
 
 [ "$HIPSYCL_PKG_TEST_PKG" = "ON" ] && bash $HIPSYCL_PKG_DEVOPS_DIR/test-packages.sh $HIPSYCL_PKG_DEVOPS_DIR
 # cleanup

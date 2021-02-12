@@ -104,7 +104,7 @@ Packager: Aksel Alpay
 Group: Development/Tools
 BuildRequires: coreutils
 BuildRoot: ${RPM_ROOT}/tmp/hipSYCL${HIPSYCL_PKG_TYPE}-${HIPSYCL_VERSION_STRING}
-Requires: python3, hipSYCL-base${HIPSYCL_PKG_TYPE}
+Requires: python3, hipSYCL-base${HIPSYCL_PKG_TYPE}, hipSYCL-core${HIPSYCL_PKG_TYPE}
 AutoReq: no
 
 %description

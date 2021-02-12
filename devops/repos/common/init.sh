@@ -9,6 +9,7 @@ export HIPSYCL_PKG_UBUNTU_PKG_DIR=$HIPSYCL_PKG_REPO_STAGE_DIR/new_pkg_ubuntu
 
 export HIPSYCL_GPG_KEY=B2B75080
 
+#Testing
 declare -A install_cmd=( ["archlinux-rolling"]="pacman -Sy --noconfirm hipSYCL" \
                          ["centos-7"]="yum -y install hipSYCL" \
                          ["centos-8"]="yum -y install hipSYCL" \
@@ -38,8 +39,42 @@ declare -A image_base=( ["archlinux-rolling"]="docker://archlinux/base" \
                          ["ubuntu-20.04"]="docker://ubuntu:20.04" 
                       )
 
-#Order of on-off: ROCM, CUDA
-declare  -A pkg_suffix=( ["ONON"]="-omp-rocm-cuda" ["OFFOFF"]="-omp" ["OFFON"]="-omp-cuda" \
-                         ["ONOFF"]="-omp-rocm")
+declare  -A pkg_suffix=( ["ONON"]="-full" ["OFFOFF"]="-omp" ["OFFON"]="-cuda" \
+                         ["ONOFF"]="-rocm")
+
+#Packging
+
+declare -A stage_dir=( ["archlinux-rolling"]="$HIPSYCL_PKG_REPO_STAGE_DIR/new_pkg_arch"    \
+                       ["centos-7"]="$HIPSYCL_PKG_REPO_STAGE_DIR/new_pkg_centos"  \
+                       ["ubuntu-18.04"]="$HIPSYCL_PKG_REPO_STAGE_DIR/new_pkg_ubuntu"  \
+                      )
+
+declare -A find_built_pkg=( ["archlinux-rolling"]='4.pkg.tar' \
+                            ["centos-7"]='4.rpm'  \
+                            ["ubuntu-18.04"]='\.deb' \
+                      )
+declare -A packaging_script=( ["archlinux-rolling"]="make-archlinux-pkg.sh"    \
+                              ["centos-7"]="make-centos-pkg.sh"  \
+                              ["ubuntu-18.04"]="make-ubuntu-pkg.sh"  \
+                      )
+
+
+#Repo creation
+declare -A repo_tools_cont=( ["archlinux-rolling"]="arch.sif" \
+                             ["centos-7"]="centos-7.sif" \
+                             ["centos-8"]="centos-7.sif" \
+                             ["ubuntu-18.04"]="ubuntu-18.04.sif" \
+                             ["ubuntu-20.04"]="ubuntu-18.04.sif"
+                       )
+
+declare -A repo_script=( ["archlinux-rolling"]="create_arch_repo.sh" \
+                             ["centos-7"]="create_centos_repo.sh" \
+                             ["centos-8"]="" \
+                             ["ubuntu-18.04"]="create_ubuntu_repo.sh" \
+                             ["ubuntu-20.04"]="create_ubuntu_repo.sh"
+                       )
+
+
 
 distros=( "centos-7" "archlinux-rolling" "ubuntu-18.04" "ubuntu-20.04")
+build_distros=( "centos-7" "archlinux-rolling" "ubuntu-18.04" ) 

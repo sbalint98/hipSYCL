@@ -5,7 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source $DIR/../common/init.sh
 
 UBUNTU_REPO_DIR=${UBUNTU_REPO_DIR:-/data/repos/deb}
-DIST=${DIST:-bionic}
+DIST=${1:-bionic}
 
 PKG_PATH=$UBUNTU_REPO_DIR/dists/$DIST/main/binary-amd64/
 RELEASE_PATH=$UBUNTU_REPO_DIR/dists/$DIST/

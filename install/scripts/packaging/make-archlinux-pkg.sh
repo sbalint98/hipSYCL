@@ -69,7 +69,7 @@ EOF
 
 cat << EOF > ${HIPSYCL_CUDA_DIR}/pkg/PKGBUILD
 # Maintainer: Aksel Alpay <aksel.alpay@uni-heidelberg.de>
-pkgname=hipSYCL-core${HIPSYCL_PKG_TYPE}
+pkgname=hipSYCL-cuda${HIPSYCL_PKG_TYPE}
 pkgver=${HIPSYCL_VERSION}
 pkgrel=${HIPSYCL_BUILD}
 pkgdesc="cuda backend for hipSYCL"
