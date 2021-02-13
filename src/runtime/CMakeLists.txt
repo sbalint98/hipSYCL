@@ -35,7 +35,7 @@ target_include_directories(hipSYCL-rt
 )
 
 install(TARGETS hipSYCL-rt
-        EXPORT install_exports
+        #EXPORT install_exports
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib/static)
 
@@ -57,7 +57,7 @@ if(WITH_CUDA_BACKEND)
   target_link_libraries(rt-backend-cuda PRIVATE hipSYCL-rt ${CUDA_LIBRARIES} ${CUDA_DRIVER_LIBRARY})
 
   install(TARGETS rt-backend-cuda
-        EXPORT install_exports
+        #EXPORT install_exports
         LIBRARY DESTINATION lib/hipSYCL
         ARCHIVE DESTINATION lib/static)
 endif()
