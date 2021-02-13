@@ -40,7 +40,7 @@ target_link_libraries(hipSYCL-rt
 )
 
 install(TARGETS hipSYCL-rt
-        #EXPORT install_exports
+        EXPORT install_exports
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib/static)
 
@@ -88,7 +88,7 @@ if(WITH_ROCM_BACKEND)
   endif()
 
   install(TARGETS rt-backend-hip
-        EXPORT install_exports
+        #EXPORT install_exports
         LIBRARY DESTINATION lib/hipSYCL
         ARCHIVE DESTINATION lib/static)
 endif()
@@ -114,7 +114,7 @@ if(WITH_CPU_BACKEND)
     target_link_libraries(rt-backend-omp PRIVATE hipSYCL-rt  OpenMP::OpenMP_CXX)
 
     install(TARGETS rt-backend-omp
-        EXPORT install_exports
+        #EXPORT install_exports
         LIBRARY DESTINATION lib/hipSYCL
         ARCHIVE DESTINATION lib/static)
 endif()
