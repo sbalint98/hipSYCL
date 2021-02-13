@@ -108,15 +108,15 @@ namespace rt {
 void backend_loader::query_backends() {
   std::string install_prefix = HIPSYCL_INSTALL_PREFIX;
 
-  std::filesystem::path backend_lib_path =
-      std::filesystem::path{install_prefix} / "lib/hipSYCL";
+  boost::filesystem::path backend_lib_path =
+      boost::filesystem::path{install_prefix} / "lib/hipSYCL";
 
   std::string shared_lib_extension = ".so";
   
-  for (const std::filesystem::directory_entry &entry :
-       std::filesystem::directory_iterator(backend_lib_path)) {
+  for (const boost::filesystem::directory_entry &entry :
+       boost::filesystem::directory_iterator(backend_lib_path)) {
 
-    if (entry.is_regular_file()) {
+    if (boost::filesystem::is_regular_file(entry)) {
       auto p = entry.path();
       if (p.extension().string() == shared_lib_extension) {
         std::string backend_name;
